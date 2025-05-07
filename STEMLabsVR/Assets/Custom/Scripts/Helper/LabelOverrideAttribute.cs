@@ -6,7 +6,7 @@ namespace Custom.Scripts.Helper
     {
         private readonly string _displayName;
         public LabelOverrideAttribute(string displayName) {
-            displayName = displayName;
+            _displayName = displayName;
         }
         
         public string GetDisplayName() {
