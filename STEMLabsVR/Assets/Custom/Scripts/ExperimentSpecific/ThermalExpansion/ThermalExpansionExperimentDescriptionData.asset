@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35775062dbf6bf84c88066340ac58ac9, type: 3}
+  m_Name: ThermalExpansionExperimentDescriptionData
+  m_EditorClassIdentifier: 
+  experimentTitle: Thermal Expansion
+  experimentTitleFontSize: 32
+  experimentDescriptionText:
+  - "When the temperature of a material is changed, the size of an object made from
+    the material also changes. This is caused by a change in the mean interatomic
+    spacing due to a change in the amplitude of vibration of the atoms. In one dimension,
+    the change in length, \u0394L. of an object is found to be approximately proportional
+    to the original length, Lo, and also to the temperature change, \uF044 T. where
+    \uF044 T - T - To. The proportionality can be expressed in equation form a "
+  - "where \uF061 is a constant known as the coefficient of linear expansion of the
+    material. If (1) is solved for \uF061, then"
+  - "which represents the fractional change in length of the material per Celsius
+    degree.  This analysis can be extended to a two-dimensional object. Figure 1
+    shows a rectangular plate of length Lo and width Wo, at temperature To. The plate
+    can be considered to be made up of thin horizontal rods of length Lo and of thin
+    vertical rods of length Wo. When the temperature of the plate changes by \uF044T
+    (= T - To), the length of the horizontal rods changes by \uF044L. and the vertical
+    rods change by \uF044 W Thus the change in the area of the plate, \uF044 A. is
+    found by subtracting the area at temperature To from the area at temperature
+    T. "
+  experimentDescriptionTextFontSize: 12
+  experimentDescriptionTextures:
+  - {fileID: 2800000, guid: 478f690957978c548a7a70a9b4dc50dc, type: 3}
+  - {fileID: 2800000, guid: 71c2f61fa43599a48abd142f760529df, type: 3}
+  experimentDescriptionTypesOrder: 0000000001000000000000000100000000000000
+  experimentStepsFontSize: 18
+  experimentSteps:
+  - Light up the cloth on top of the canister
+  - Move the ball close to the flame
+  - Leave the ball close to the flame for a few minutes
+  - Try to move the ball through the ring
+  - Note any observations on the whiteboard
