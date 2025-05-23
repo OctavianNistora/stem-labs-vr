@@ -15,4 +15,6 @@ public class StudentLaboratoryReport
     public required User Student { get; set; }
     
     public string? ObservationsImageLink { get; set; }
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

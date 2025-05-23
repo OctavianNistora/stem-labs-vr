@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using STEMLabsServer.Models.DTOs;
-using STEMLabsServer.Services;
+using STEMLabsServer.Services.Interfaces;
 
 namespace STEMLabsServer.Controllers
 {
@@ -11,6 +11,7 @@ namespace STEMLabsServer.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<string>> Register([FromBody] UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -18,18 +19,84 @@ namespace STEMLabsServer.Controllers
                 return BadRequest("Invalid body format.");
             }
             
-            var result = await userService.RegisterUser(userRegisterDto, cancellationToken);
-            if (!result)
+            var reasonForInvalid = await userService.RegisterUser(userRegisterDto, cancellationToken);
+            if (!reasonForInvalid.Success)
             {
-                return BadRequest("User already exists.");
+                return BadRequest(reasonForInvalid.FailureReason);
             }
             
             return Ok("User registered successfully.");
         }
         
-        [HttpPost("{id}/laboratory-sessions")]
-        [Authorize(Roles = "Teacher,Admin")]
-        public async Task<ActionResult<string>> AddLaboratorySession([FromRoute] int id, [FromBody] LaboratorySessionDto laboratorySessionDto, CancellationToken cancellationToken)
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<UserListItemDto>>> GetAllUsers(CancellationToken cancellationToken)
+        {
+            var users = await userService.GetAllUsers(cancellationToken);
+
+            return Ok(users);
+        }
+        
+        [HttpGet("{id}/profile")]
+        [Authorize]
+        public async Task<ActionResult<UserProfileDto>> GetUserProfile([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
+            {
+                return Unauthorized("Token is missing claims.");
+            }
+
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return BadRequest("Invalid token user ID.");
+            }
+
+            if (userId != id)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to view this user's profile.");
+            }
+
+            var userProfile = await userService.GetUserProfile(id, cancellationToken);
+            
+            if (userProfile == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(userProfile);
+        }
+        
+        [HttpGet("{id}/email")]
+        [Authorize]
+        public async Task<ActionResult<string>> GetUserEmail([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
+            {
+                return Unauthorized("Token is missing claims.");
+            }
+
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return BadRequest("Invalid token user ID.");
+            }
+
+            if (userId != id)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to view this user's email.");
+            }
+
+            var result = await userService.GetUserEmail(id, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(result.FailureReason);
+            }
+
+            return Ok(result.Value);
+        }
+        
+        [HttpPut("{id}/email")]
+        [Authorize]
+        public async Task<ActionResult<string>> UpdateUserEmail([FromRoute] int id, [FromBody] UserEmailUpdateDto userEmailUpdateDto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -41,57 +108,186 @@ namespace STEMLabsServer.Controllers
                 return Unauthorized("Token is missing claims.");
             }
 
-            if (int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
             {
                 return BadRequest("Invalid token user ID.");
             }
-            
+
             if (userId != id)
             {
-                return Forbid("You are not authorized to add a laboratory session for this user.");
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to update this user's email.");
             }
-            
-            var result = await userService.AddLaboratorySession(id, laboratorySessionDto, cancellationToken);
-            if (!result)
+
+            var result = await userService.UpdateUserEmail(id, userEmailUpdateDto, cancellationToken);
+            if (!result.Success)
             {
-                return BadRequest("Failed to add laboratory session.");
+                return BadRequest(result.FailureReason);
             }
+
+            return Ok("Email updated successfully.");
+        }
+        
+        [HttpPut("{id}/password")]
+        [Authorize]
+        public async Task<ActionResult<string>> UpdateUserPassword([FromRoute] int id, [FromBody] UserPasswordUpdateDto userPasswordUpdateDto, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid body format.");
+            }
+
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
+            {
+                return Unauthorized("Token is missing claims.");
+            }
+
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return BadRequest("Invalid token user ID.");
+            }
+
+            if (userId != id)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to update this user's password.");
+            }
+
+            var result = await userService.UpdateUserPassword(id, userPasswordUpdateDto, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(result.FailureReason);
+            }
+
+            return Ok("Password updated successfully.");
+        }
+        
+        [HttpPut("{id}/profile")]
+        [Authorize]
+        public async Task<ActionResult<string>> UpdateUserProfile([FromRoute] int id, [FromBody] UserProfileDto userProfileUpdateDto, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid body format.");
+            }
+
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
+            {
+                return Unauthorized("Token is missing claims.");
+            }
+
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return BadRequest("Invalid token user ID.");
+            }
+
+            if (userId != id)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to update this user's profile.");
+            }
+
+            var result = await userService.UpdateUserProfile(id, userProfileUpdateDto, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(result.FailureReason);
+            }
+
+            return Ok("User profile updated successfully.");
+        }
+        
+        [HttpGet("{id}/related-laboratories")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<RelatedLaboratoryDto>>> GetRelatedLaboratories([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
+            {
+                return Unauthorized("Token is missing claims.");
+            }
+
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return BadRequest("Invalid token user ID.");
+            }
+
+            if (userId != id)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to view related laboratories for this user.");
+            }
+
+            var laboratories = await userService.GetRelatedLaboratories(id, cancellationToken);
             
-            return Ok("Laboratory session added successfully.");
+            if (laboratories == null)
+            {
+                return NotFound("User not found.");
+            }
+            if (!laboratories.Any())
+            {
+                return NotFound("No related laboratories found.");
+            }
+
+            return Ok(laboratories);
+        }
+        
+        [HttpGet("{userId}/related-laboratories/{labId}/sessions")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<RelatedSessionDto>>> GetRelatedSessions([FromRoute] int userId, [FromRoute] int labId, CancellationToken cancellationToken)
+        {
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
+            {
+                return Unauthorized("Token is missing claims.");
+            }
+
+            if (!int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var currentUserId))
+            {
+                return BadRequest("Invalid token user ID.");
+            }
+
+            if (currentUserId != userId)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You are not authorized to view related sessions for this user.");
+            }
+
+            var sessions = await userService.GetRelatedSessions(userId, labId, cancellationToken);
+            
+            if (sessions == null)
+            {
+                return NotFound("User or laboratory not found.");
+            }
+            if (!sessions.Any())
+            {
+                return NotFound("No related sessions found.");
+            }
+
+            return Ok(sessions);
+        }
+        
+        [HttpPut("{id}/role")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<string>> UpdateUserRole([FromRoute] int id, [FromBody] string newRole, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid body format.");
+            }
+
+            var result = await userService.UpdateUserRole(id, newRole, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(result.FailureReason);
+            }
+
+            return Ok("User role updated successfully.");
         }
 
-        [HttpPost("{id}/laboratory-report")]
-        [Authorize(Roles = "Student")]
-        public async Task<ActionResult<string>> AddLaboratoryReport([FromRoute] int id,
-            [FromBody] LaboratoryReportDto laboratoryReportDto, CancellationToken cancellationToken)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<string>> DeleteUser([FromRoute] int id, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
+            var result = await userService.DeleteUser(id, cancellationToken);
+            if (!result.Success)
             {
-                return BadRequest("Invalid body format.");
+                return BadRequest(result.FailureReason);
             }
 
-            if (HttpContext.User.Identity is not ClaimsIdentity identity)
-            {
-                return Unauthorized("Token is missing claims.");
-            }
-
-            if (int.TryParse(identity.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
-            {
-                return BadRequest("Invalid token user ID.");
-            }
-
-            if (userId != id)
-            {
-                return Forbid("You are not authorized to add a laboratory report for this user.");
-            }
-
-            var result = await userService.AddLaboratoryReport(id, laboratoryReportDto, cancellationToken);
-            if (!result)
-            {
-                return BadRequest("Failed to add laboratory report.");
-            }
-
-            return Ok("Laboratory report added successfully.");
+            return Ok("User deleted successfully.");
         }
     }
 }

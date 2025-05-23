@@ -9,4 +9,6 @@ public class Laboratory
     public required string Name { get; set; }
     
     public required int SceneId { get; set; }
+    
+    public required int CheckListStepCount { get; set; }
 }

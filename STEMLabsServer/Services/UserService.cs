@@ -3,121 +3,262 @@ using Microsoft.EntityFrameworkCore;
 using STEMLabsServer.Data;
 using STEMLabsServer.Models.DTOs;
 using STEMLabsServer.Models.Entities;
+using STEMLabsServer.Services.Interfaces;
+using STEMLabsServer.Shared;
 
 namespace STEMLabsServer.Services;
 
 public class UserService(MainDbContext context) : IUserService
 {
-    public async Task<bool> RegisterUser(UserRegisterDto user, CancellationToken cancellationToken)
+    public async Task<ServiceStatus> RegisterUser(UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
     {
-        if (await context.Users.AnyAsync(u => u.Username == user.Username, cancellationToken))
+        if (string.IsNullOrWhiteSpace(userRegisterDto.Email) ||
+            string.IsNullOrWhiteSpace(userRegisterDto.FirstName) ||
+            string.IsNullOrWhiteSpace(userRegisterDto.LastName) ||
+            string.IsNullOrWhiteSpace(userRegisterDto.PhoneNumber))
         {
-            return false;
+            return new ServiceStatus(false, "All fields are required.");
         }
+        
+        if (await context.Users.AnyAsync(u => u.Email == userRegisterDto.Email, cancellationToken))
+        {
+            return new ServiceStatus(false, "Email already registered.");
+        }
+
+        string username;
+        do
+        {
+            username = "username-" + RandomStringGenerator.Generate(8);
+        } while (await context.Users.AnyAsync(u => u.Username == username, cancellationToken));
+        
+        var passwordUnhashed = "password-" + RandomStringGenerator.Generate(16);
+        var passwordHashed = new PasswordHasher<User>()
+            .HashPassword(null!, passwordUnhashed);
         
         var newUser = new User
         {
-            Username = user.Username,
-            PasswordHashed = user.Password,
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            PhoneNumber = user.PhoneNumber,
+            Username = username,
+            PasswordHashed = passwordHashed,
+            Email = userRegisterDto.Email,
+            FirstName = userRegisterDto.FirstName,
+            LastName = userRegisterDto.LastName,
+            PhoneNumber = userRegisterDto.PhoneNumber,
         };
-        var passwordHashed = new PasswordHasher<User>()
-            .HashPassword(newUser, user.Password);
-        newUser.PasswordHashed = passwordHashed;
         
         await context.Users.AddAsync(newUser, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         
-        return true;
-    }
-
-    public async Task<bool> AddLaboratorySession(int teacherId, LaboratorySessionDto laboratorySessionDto,
-        CancellationToken cancellationToken)
-    {
-        var teacher =
-            await context.Users.FirstOrDefaultAsync(user => user.Id == teacherId, cancellationToken);
-        if (teacher == null)
+        var subject = "STEMLabsVR Account Created";
+        var body = $"Your account has been created successfully.\n" +
+                   $"Username: {username}\n" +
+                   $"Password: {passwordUnhashed}\n" +
+                   "You can change your username and password later in your profile settings after logging in.";
+        try
         {
-            return false;
+            await MailProvider.SendEmailAsync(userRegisterDto.Email, subject, body, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            context.Users.Remove(newUser);
+            await context.SaveChangesAsync(cancellationToken);
+            Console.WriteLine($"Failed to send email: {e.Message}");
+            return new ServiceStatus(false, "Failed to send email. Please try again later.");
         }
         
-        var laboratory =
-            await context.Laboratories.FirstOrDefaultAsync(lab => lab.SceneId == laboratorySessionDto.SceneId,
-                cancellationToken);
-        if (laboratory == null)
-        {
-            return false;
-        }
-        
-        var laboratorySession = new LaboratorySession
-        {
-            Laboratory = laboratory,
-            CreatedBy = teacher,
-            InviteCode = laboratorySessionDto.InviteCode
-        };
-        
-        await context.LaboratorySessions.AddAsync(laboratorySession, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-        
-        return true;
+        return new ServiceStatus(true);
     }
     
-    public async Task<bool> AddLaboratoryReport(int studentId, LaboratoryReportDto laboratoryReportDto,
+    public async Task<IEnumerable<RelatedLaboratoryDto>?> GetRelatedLaboratories(int userId,
         CancellationToken cancellationToken)
     {
-        var student =
-            await context.Users.FirstOrDefaultAsync(user => user.Id == studentId, cancellationToken);
-        if (student == null)
+        var user =
+            await context.Users.FirstOrDefaultAsync(user => user.Id == userId, cancellationToken);
+        if (user == null)
         {
-            return false;
+            return null;
         }
         
-        var laboratorySession =
-            await context.LaboratorySessions.FirstOrDefaultAsync(lab => lab.InviteCode == laboratoryReportDto.InvitedCode,
-                cancellationToken);
-        if (laboratorySession == null)
+        var relatedLaboratories = await context.StudentLaboratoryReports
+            .Where(report => report.StudentId == userId)
+            .Include(laborator => laborator.LaboratorySession)
+            .ThenInclude(session => session.Laboratory)
+            .Select(report => new RelatedLaboratoryDto
+            {
+                Id = report.LaboratorySession.LaboratoryId,
+                Name = report.LaboratorySession.Laboratory.Name,
+            })
+            .DistinctBy(laboratory => laboratory.Id)
+            .ToListAsync(cancellationToken);
+        
+        return relatedLaboratories;
+    }
+    
+    public async Task<ServiceStatus> UpdateUserRole(int userId, string newRole, CancellationToken cancellationToken)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null)
         {
-            return false;
+            return new ServiceStatus(false, "User not found.");
         }
-        
-        var laboratoryReport = new StudentLaboratoryReport()
-        {
-            LaboratorySession = laboratorySession,
-            Student = student
-        };
-        
-        await context.StudentLaboratoryReports.AddAsync(laboratoryReport, cancellationToken);
+
+        user.UserRole = Enum.Parse<UserRole>(newRole, true);
+        context.Users.Update(user);
         await context.SaveChangesAsync(cancellationToken);
         
-        List<StudentLaboratoryCompletedStep> completedSteps = [];
-        if (laboratoryReportDto.StepsCompleted.Count > 0)
-        {
-            foreach (var step in laboratoryReportDto.StepsCompleted)
-            {
-                var laboratoryStep = context.LaboratoryChecklistSteps
-                    .Where(lab => lab.LaboratoryId == laboratorySession.LaboratoryId && lab.StepNumber == step)
-                    .MaxBy(lab => lab.Version);
+        return new ServiceStatus(true);
+    }
 
-                if (laboratoryStep == null)
-                {
-                    return false;
-                }
-                
-                var completedStep = new StudentLaboratoryCompletedStep
-                {
-                    LaboratorySession = laboratorySession,
-                    LaboratoryChecklistStep = laboratoryStep,
-                    Student = student,
-                };
-                completedSteps.Add(completedStep);
-            }
-            await context.StudentLaboratoryCompletedSteps.AddRangeAsync(completedSteps, cancellationToken);
+    public async Task<IEnumerable<RelatedSessionDto>?> GetRelatedSessions(int userId, int labId, CancellationToken cancellationToken)
+    {
+        var laboratorySessionsCreated = context.LaboratorySessions
+            .Where(session => session.LaboratoryId == labId && session.CreatedById == userId)
+            .Select(session => new RelatedSessionDto
+            {
+                Id = session.Id,
+                DateCreated = session.CreatedAt,
+            });
+        
+        var laboratorySessionsParticipated = context.StudentLaboratoryReports
+            .Where(report => report.StudentId == userId && report.LaboratorySession.LaboratoryId == labId)
+            .Include(report => report.LaboratorySession)
+            .Select(report => new RelatedSessionDto
+            {
+                Id = report.LaboratorySession.Id,
+                DateCreated = report.LaboratorySession.CreatedAt,
+            });
+        
+        var relatedSessions = await laboratorySessionsCreated 
+            .Union(laboratorySessionsParticipated)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        
+        return relatedSessions;
+    }
+
+    public async Task<UserProfileDto?> GetUserProfile(int userId, CancellationToken cancellationToken)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null)
+        {
+            return null;
         }
         
+        return new UserProfileDto
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+        };
+    }
+
+    public async Task<ServiceStatus> UpdateUserProfile(int userId, UserProfileDto userProfileUpdateDto, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(userProfileUpdateDto.FirstName) ||
+            string.IsNullOrWhiteSpace(userProfileUpdateDto.LastName) ||
+            string.IsNullOrWhiteSpace(userProfileUpdateDto.PhoneNumber))
+        {
+            return new ServiceStatus(false, "All fields are required.");
+        }
         
-        return true;
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null)
+        {
+            return new ServiceStatus(false, "User not found.");
+        }
+        
+        user.FirstName = userProfileUpdateDto.FirstName;
+        user.LastName = userProfileUpdateDto.LastName;
+        user.PhoneNumber = userProfileUpdateDto.PhoneNumber;
+        
+        context.Users.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
+        
+        return new ServiceStatus(true);
+    }
+
+    public async Task<ServiceStatusWithValue<string>> GetUserEmail(int userId, CancellationToken cancellationToken)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        
+        return user == null
+            ? new ServiceStatusWithValue<string>(false, "User not found.")
+            : new ServiceStatusWithValue<string>(true, value: user.Email);
+    }
+
+    public async Task<ServiceStatus> UpdateUserEmail(int userId, UserEmailUpdateDto userEmailUpdateDto, CancellationToken cancellationToken)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null)
+        {
+            return new ServiceStatus(false, "User not found.");
+        }
+        
+        var hashedPassword = new PasswordHasher<User>().HashPassword(user, userEmailUpdateDto.Password);
+        if (user.PasswordHashed != hashedPassword)
+        {
+            return new ServiceStatus(false, "Incorrect password.");
+        }
+
+        if (await context.Users.AnyAsync(u => u.Email == userEmailUpdateDto.NewEmail && u.Id != userId, cancellationToken))
+        {
+            return new ServiceStatus(false, "Email already registered.");
+        }
+
+        user.Email = userEmailUpdateDto.NewEmail;
+        context.Users.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
+        
+        return new ServiceStatus(true);
+    }
+
+    public async Task<ServiceStatus> UpdateUserPassword(int userId, UserPasswordUpdateDto userPasswordUpdateDto, CancellationToken cancellationToken)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null)
+        {
+            return new ServiceStatus(false, "User not found.");
+        }
+        
+        var hashedPassword = new PasswordHasher<User>().HashPassword(user, userPasswordUpdateDto.CurrentPassword);
+        if (user.PasswordHashed != hashedPassword)
+        {
+            return new ServiceStatus(false, "Incorrect current password.");
+        }
+
+        user.PasswordHashed = new PasswordHasher<User>().HashPassword(user, userPasswordUpdateDto.NewPassword);
+        context.Users.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
+        
+        return new ServiceStatus(true);
+    }
+
+    public async Task<IEnumerable<UserListItemDto>> GetAllUsers(CancellationToken cancellationToken)
+    {
+        return await context.Users.OrderByDescending(user => user.Id)
+            .Select(user => new UserListItemDto
+            {
+                Uid = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                Email = user.Email,
+                CreatedAt = user.DateCreated,
+                Role = user.UserRole.ToString()
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<ServiceStatus> DeleteUser(int userId, CancellationToken cancellationToken)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null)
+        {
+            return new ServiceStatus(false, "User not found.");
+        }
+
+        context.Users.Remove(user);
+        await context.SaveChangesAsync(cancellationToken);
+        
+        return new ServiceStatus(true);
     }
 }

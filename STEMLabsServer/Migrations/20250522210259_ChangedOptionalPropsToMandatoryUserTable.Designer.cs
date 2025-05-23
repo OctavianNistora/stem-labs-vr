@@ -12,8 +12,8 @@ using STEMLabsServer.Data;
 namespace STEMLabsServer.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250518214446_AddedLaboratoryEntities")]
-    partial class AddedLaboratoryEntities
+    [Migration("20250522210259_ChangedOptionalPropsToMandatoryUserTable")]
+    partial class ChangedOptionalPropsToMandatoryUserTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,16 @@ namespace STEMLabsServer.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.Laboratory", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.Laboratory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CheckListStepCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -45,7 +48,7 @@ namespace STEMLabsServer.Migrations
                     b.ToTable("Laboratories");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.LaboratoryChecklistStep", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratoryChecklistStep", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +76,7 @@ namespace STEMLabsServer.Migrations
                     b.ToTable("LaboratoryChecklistSteps");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.LaboratorySession", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratorySession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +106,7 @@ namespace STEMLabsServer.Migrations
                     b.ToTable("LaboratorySessions");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.StudentLaboratoryCompletedStep", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.PasswordResetRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,33 +114,58 @@ namespace STEMLabsServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("LaboratoryChecklistStepId")
-                        .HasColumnType("integer");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("LaboratorySessionId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LaboratoryChecklistStepId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("LaboratorySessionId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentLaboratoryCompletedSteps");
+                    b.ToTable("PasswordResetRequests");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.StudentLaboratoryReport", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.StudentLaboratoryReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("LaboratorySessionId")
                         .HasColumnType("integer");
@@ -157,7 +185,33 @@ namespace STEMLabsServer.Migrations
                     b.ToTable("StudentLaboratoryReports");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.User", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.StudentLaboratoryReportStep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LaboratoryChecklistStepId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentLaboratoryReportId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LaboratoryChecklistStepId");
+
+                    b.HasIndex("StudentLaboratoryReportId");
+
+                    b.ToTable("StudentLaboratoryReportSteps");
+                });
+
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,12 +227,14 @@ namespace STEMLabsServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHashed")
@@ -186,6 +242,7 @@ namespace STEMLabsServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<byte>("UserRole")
@@ -200,9 +257,9 @@ namespace STEMLabsServer.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.LaboratoryChecklistStep", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratoryChecklistStep", b =>
                 {
-                    b.HasOne("Diploma_Server.Models.Entities.Laboratory", "Laboratory")
+                    b.HasOne("STEMLabsServer.Models.Entities.Laboratory", "Laboratory")
                         .WithMany()
                         .HasForeignKey("LaboratoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -211,15 +268,15 @@ namespace STEMLabsServer.Migrations
                     b.Navigation("Laboratory");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.LaboratorySession", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratorySession", b =>
                 {
-                    b.HasOne("Diploma_Server.Models.Entities.User", "CreatedBy")
+                    b.HasOne("STEMLabsServer.Models.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Diploma_Server.Models.Entities.Laboratory", "Laboratory")
+                    b.HasOne("STEMLabsServer.Models.Entities.Laboratory", "Laboratory")
                         .WithMany()
                         .HasForeignKey("LaboratoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -230,50 +287,64 @@ namespace STEMLabsServer.Migrations
                     b.Navigation("Laboratory");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.StudentLaboratoryCompletedStep", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.PasswordResetRequest", b =>
                 {
-                    b.HasOne("Diploma_Server.Models.Entities.LaboratoryChecklistStep", "LaboratoryChecklistStep")
+                    b.HasOne("STEMLabsServer.Models.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("LaboratoryChecklistStepId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Diploma_Server.Models.Entities.LaboratorySession", "LaboratorySession")
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("STEMLabsServer.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.StudentLaboratoryReport", b =>
+                {
+                    b.HasOne("STEMLabsServer.Models.Entities.LaboratorySession", "LaboratorySession")
                         .WithMany()
                         .HasForeignKey("LaboratorySessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Diploma_Server.Models.Entities.User", "Student")
+                    b.HasOne("STEMLabsServer.Models.Entities.User", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("LaboratoryChecklistStep");
 
                     b.Navigation("LaboratorySession");
 
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Diploma_Server.Models.Entities.StudentLaboratoryReport", b =>
+            modelBuilder.Entity("STEMLabsServer.Models.Entities.StudentLaboratoryReportStep", b =>
                 {
-                    b.HasOne("Diploma_Server.Models.Entities.LaboratorySession", "LaboratorySession")
+                    b.HasOne("STEMLabsServer.Models.Entities.LaboratoryChecklistStep", "LaboratoryChecklistStep")
                         .WithMany()
-                        .HasForeignKey("LaboratorySessionId")
+                        .HasForeignKey("LaboratoryChecklistStepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Diploma_Server.Models.Entities.User", "Student")
+                    b.HasOne("STEMLabsServer.Models.Entities.StudentLaboratoryReport", "StudentLaboratoryReport")
                         .WithMany()
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentLaboratoryReportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LaboratorySession");
+                    b.Navigation("LaboratoryChecklistStep");
 
-                    b.Navigation("Student");
+                    b.Navigation("StudentLaboratoryReport");
                 });
 #pragma warning restore 612, 618
         }

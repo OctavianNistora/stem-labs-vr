@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using STEMLabsServer.Data;
@@ -11,9 +12,11 @@ using STEMLabsServer.Data;
 namespace STEMLabsServer.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250520235239_AddedSubmissionDateForLaboratoryReports")]
+    partial class AddedSubmissionDateForLaboratoryReports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace STEMLabsServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CheckListStepCount")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -42,7 +42,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Laboratories", (string)null);
+                    b.ToTable("Laboratories");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratoryChecklistStep", b =>
@@ -70,7 +70,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasIndex("LaboratoryId");
 
-                    b.ToTable("LaboratoryChecklistSteps", (string)null);
+                    b.ToTable("LaboratoryChecklistSteps");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratorySession", b =>
@@ -100,7 +100,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasIndex("LaboratoryId");
 
-                    b.ToTable("LaboratorySessions", (string)null);
+                    b.ToTable("LaboratorySessions");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.PasswordResetRequest", b =>
@@ -125,7 +125,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PasswordResetRequests", (string)null);
+                    b.ToTable("PasswordResetRequests");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.RefreshToken", b =>
@@ -150,7 +150,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.StudentLaboratoryReport", b =>
@@ -179,7 +179,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentLaboratoryReports", (string)null);
+                    b.ToTable("StudentLaboratoryReports");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.StudentLaboratoryReportStep", b =>
@@ -205,7 +205,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasIndex("StudentLaboratoryReportId");
 
-                    b.ToTable("StudentLaboratoryReportSteps", (string)null);
+                    b.ToTable("StudentLaboratoryReportSteps");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.User", b =>
@@ -224,14 +224,12 @@ namespace STEMLabsServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHashed")
@@ -239,7 +237,6 @@ namespace STEMLabsServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<byte>("UserRole")
@@ -251,7 +248,7 @@ namespace STEMLabsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("STEMLabsServer.Models.Entities.LaboratoryChecklistStep", b =>

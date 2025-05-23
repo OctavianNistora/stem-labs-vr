@@ -137,8 +137,6 @@ namespace STEMLabsServer.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.UniqueConstraint("AK_StudentLaboratoryReports_LaboratorySessionId_StudentId",
-                        x => new { x.LaboratorySessionId, x.StudentId });
                 });
 
             migrationBuilder.CreateIndex(

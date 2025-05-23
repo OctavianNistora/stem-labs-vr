@@ -12,7 +12,7 @@ using STEMLabsServer.Data;
 namespace STEMLabsServer.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250518172424_Initial")]
+    [Migration("20250513172424_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
