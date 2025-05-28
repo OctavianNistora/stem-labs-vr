@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace Custom.Scripts.ExperimentGeneral
 {
     // This class handles the clipboard functionality for the experiments.
-    class ClipboardHandler : NetworkBehaviour
+    public class ClipboardHandler : NetworkBehaviour
     {
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI contentText;
@@ -26,10 +26,11 @@ namespace Custom.Scripts.ExperimentGeneral
         [SerializeField] private ExperimentData experimentData;
 
         private List<Page> _pages;
-        NetworkVariable<int> _currentPage = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone,
+
+        private readonly NetworkVariable<int> _currentPage = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Owner);
         // String that gets added to the beginning of each paragraph if automatic paragraph indentation is enabled
-        private string _paragraphPrefix = "    ";
+        private readonly string _paragraphPrefix = "    ";
         private List<Page> _checkListPages;
         private bool[] _stepsCompletedArray;
 
@@ -39,8 +40,10 @@ namespace Custom.Scripts.ExperimentGeneral
             // Subscribe to the page change event on all clients and the server
             _currentPage.OnValueChanged += HandlePageChange;
             
-            // Retrieve the only the clipboard data from the experiment data and build the pages
+            // Retrieve only the clipboard data from the experiment data and build the pages
             var clipboardInput = experimentData.ExperimentClipboardData();
+            clipboardInput.steps = SessionData.checklistSteps;
+            clipboardInput.steps.Add("Write down any observations made during the experiment on the whiteboard.");
             BuildPages(clipboardInput);
             
             // Disable all UI elements and then re-enable only the display UI elements required for the initial page
@@ -56,6 +59,11 @@ namespace Custom.Scripts.ExperimentGeneral
             SetButtonsActiveState(_currentPage.Value);
             _stepsCompletedArray = new bool[clipboardInput.steps.Count];
             WhiteboardColliderEventEmitter.Instance.OnTriggerEnterEvent += HandleTrigger;
+            var doorHandlers = FindObjectsOfType<DoorHandler>();
+            foreach (var doorHandler in doorHandlers)
+            {
+                doorHandler.SetCliboardHandler(this);
+            }
         }
 
         public override void OnNetworkDespawn()
@@ -195,7 +203,7 @@ namespace Custom.Scripts.ExperimentGeneral
                 {
                     AddText(ref page, element.text, experimentClipboardData.contentFontSize);
                 }
-                else if (element.texture != null)
+                else if (element.texture)
                 {
                     AddImage(ref page, pageAspectRatio, element.texture, maximumImageHeight, lineActualHeight);
                 }
@@ -300,7 +308,7 @@ namespace Custom.Scripts.ExperimentGeneral
             var imageDisplayHeight = imageAspectRatio < pageAspectRatio
                 ? contentText.rectTransform.rect.height
                 : contentText.rectTransform.rect.width / imageAspectRatio;
-            if (maximumImageRelativeHeight > 0 && maximumImageRelativeHeight <= 1)
+            if (maximumImageRelativeHeight is > 0 and <= 1)
             {
                 imageDisplayHeight = Mathf.Min(imageDisplayHeight, maximumImageHeight);
             }
@@ -330,7 +338,7 @@ namespace Custom.Scripts.ExperimentGeneral
             duplicatedRawImageComponent.texture = texture;
         }
 
-        public void AddCheckList(ref Page page, List<string> experimentStepsList, int experimentStepsListPageFontSize)
+        private void AddCheckList(ref Page page, List<string> experimentStepsList, int experimentStepsListPageFontSize)
         {
             page.text = "Experiment Steps Checklist:\n";
             page.fontSize = experimentStepsListPageFontSize;
@@ -416,10 +424,28 @@ namespace Custom.Scripts.ExperimentGeneral
         {
             CompleteExperimentStep(_stepsCompletedArray.Length);
         }
+        
+        public List<int> GetStepsCompleted()
+        {
+            var stepsCompleted = new List<int>();
+            for (int i = 0; i < _stepsCompletedArray.Length - 1; i++)
+            {
+                if (_stepsCompletedArray[i])
+                {
+                    stepsCompleted.Add(i + 1);
+                }
+            }
+            return stepsCompleted;
+        }
+        
+        public bool AreObservationsMade()
+        {
+            return _stepsCompletedArray.Length > 0 && _stepsCompletedArray[_stepsCompletedArray.Length - 1];
+        }
     }
 
     // Auxiliary class used to store the clipboard data for each page
-    class Page
+    public class Page
     {
         public int fontSize { get; set; }
         public String title { get; set; }

@@ -14,7 +14,7 @@ namespace Custom.Scripts.ExperimentGeneral
         void Start()
         {
             // Find all the doors in the scene
-            var doorScriptList = FindObjectsByType<DoorSceneSwitchScript>(FindObjectsSortMode.None);
+            var doorScriptList = FindObjectsByType<DoorHandler>(FindObjectsSortMode.None);
 
             foreach (var doorScript in doorScriptList)
             {

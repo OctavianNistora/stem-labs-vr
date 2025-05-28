@@ -22,7 +22,7 @@ namespace Custom.Scripts.Helper
             }
 
             // Find all door scripts in the scene and check if the previous scene path matches
-            var doorScriptList = FindObjectsByType<DoorSceneSwitchScript>(FindObjectsSortMode.None);
+            var doorScriptList = FindObjectsByType<DoorHandler>(FindObjectsSortMode.None);
         
             // Iterate through each door script to find the matching scene path and if found, set the spawn point
             foreach (var doorScript in doorScriptList)

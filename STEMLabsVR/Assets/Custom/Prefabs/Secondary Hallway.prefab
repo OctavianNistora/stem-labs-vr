@@ -846,6 +846,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4477314317834938178}
     m_Modifications:
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 2472140290052513913}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: isHallwayDoor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2216089235230149461, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -938,6 +946,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4477314317834938178}
     m_Modifications:
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 4713547170692583540}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: isHallwayDoor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2216089235230149461, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1050,6 +1066,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 9137855130081341957}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: isHallwayDoor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1620948397055853873, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_Size.y
       value: -0.2910521
@@ -1138,6 +1162,30 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 8403854493997372232, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1197,6 +1245,14 @@ PrefabInstance:
     - target: {fileID: 218155897131902246, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 7921481291117451307}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: isHallwayDoor
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1620948397055853873, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_Size.y
@@ -1293,6 +1349,26 @@ PrefabInstance:
     - target: {fileID: 6913123390994991646, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325275168951441703, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 8403854493997372232, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_IsActive

@@ -21,6 +21,8 @@ namespace Custom.Scripts.Hallway
         private List<SceneReference> westHallwayScenes;
         [SerializeField]
         private List<SceneReference> eastHallwayScenes;
+        [SerializeField]
+        private Camera vrCamera;
 
         [SerializeField]
         private PrimaryHallwayParts primaryHallwayParts;
@@ -28,7 +30,7 @@ namespace Custom.Scripts.Hallway
         // Sets the parameters for the primary hallway.
         public void SetHallwayConfig(bool isFirstIteration, bool isDeadEndedNorth, bool isDeadEndedSouth,
             bool isFloorElevated, bool isCeilingRoof, List<SceneReference> westHallwayScenes,
-            List<SceneReference> eastHallwayScenes)
+            List<SceneReference> eastHallwayScenes, Camera vrCamera)
         {
             this.isFirstIteration = isFirstIteration;
             this.isDeadEndedNorth = isDeadEndedNorth;
@@ -37,6 +39,7 @@ namespace Custom.Scripts.Hallway
             this.isCeilingRoof = isCeilingRoof;
             this.westHallwayScenes = westHallwayScenes;
             this.eastHallwayScenes = eastHallwayScenes;
+            this.vrCamera = vrCamera;
 
             RebuildPrimaryHallway();
         }
@@ -231,7 +234,8 @@ namespace Custom.Scripts.Hallway
                     sceneList.Add(westHallwayScenes[i + 1]);
                 }
 
-                secondaryHallwayGenerator.SetSecondaryHallwayConfig(true, i + 2 >= westHallwayScenes.Count, sceneList);
+                secondaryHallwayGenerator.SetSecondaryHallwayConfig(true, i + 2 >= westHallwayScenes.Count, sceneList,
+                    vrCamera);
             }
             
             // Generate the east-side secondary hallways based on the scenes provided.
@@ -253,7 +257,8 @@ namespace Custom.Scripts.Hallway
                     sceneList.Add(eastHallwayScenes[i + 1]);
                 }
 
-                secondaryHallwayGenerator.SetSecondaryHallwayConfig(false, i + 2 >= eastHallwayScenes.Count, sceneList);
+                secondaryHallwayGenerator.SetSecondaryHallwayConfig(false, i + 2 >= eastHallwayScenes.Count, sceneList,
+                    vrCamera);
             }
         }
 

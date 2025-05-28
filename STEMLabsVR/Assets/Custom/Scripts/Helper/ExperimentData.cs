@@ -21,8 +21,6 @@ namespace Custom.Scripts.Helper
         private List<ExperimentDescriptionType> experimentDescriptionTypesOrder;
         [SerializeField]
         private int experimentStepsFontSize;
-        [SerializeField]
-        private List<string> experimentSteps;
 
         // Method that retrieves all the clipboard data for the experiment in the correct format.
         public ExperimentClipboardData ExperimentClipboardData()
@@ -52,7 +50,6 @@ namespace Custom.Scripts.Helper
             }
         
             experimentClipboardData.stepsFontSize = experimentDescriptionTextFontSize;
-            experimentClipboardData.steps = experimentSteps;
         
             return experimentClipboardData;
         }

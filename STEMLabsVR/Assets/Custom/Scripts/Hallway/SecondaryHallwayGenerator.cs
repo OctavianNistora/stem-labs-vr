@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Custom.Scripts.Helper;
 using Tymski;
+using UnityEditor;
 using UnityEngine;
 namespace Custom.Scripts.Hallway
 {
@@ -13,15 +15,18 @@ namespace Custom.Scripts.Hallway
         private bool isDeadEnded;
         [SerializeField]
         private List<SceneReference> sceneList;
+        [SerializeField]
+        private Camera vrCamera;
 
         [SerializeField]
         private SecondaryHallwayParts secondaryHallwayParts;
 
-        public void SetSecondaryHallwayConfig(bool isWestSideHallway, bool isDeadEnded, List<SceneReference> sceneList)
+        public void SetSecondaryHallwayConfig(bool isWestSideHallway, bool isDeadEnded, List<SceneReference> sceneList, Camera vrCamera)
         {
             this.isWestSideHallway = isWestSideHallway;
             this.isDeadEnded = isDeadEnded;
             this.sceneList = sceneList;
+            this.vrCamera = vrCamera;
 
             RebuildSecondaryHallway();
         }
@@ -30,15 +35,20 @@ namespace Custom.Scripts.Hallway
         {
             SetDoors();
             SetWalls();
+            SetUiCamera();
         }
 
         // This method sets the correct doors of the secondary hallway based on the configuration.
         private void SetDoors()
         {
+#if UNITY_EDITOR
+            var buildScenes = EditorBuildSettings.scenes.Where(scene => scene.enabled)
+                .Select(scene => scene.path).ToList();
             if (isWestSideHallway)
             {
                 secondaryHallwayParts.westSouthDoor.SetActive(true);
-                secondaryHallwayParts.westSouthDoor.GetComponent<DoorSceneSwitchScript>().SetScene(sceneList[0]);
+                secondaryHallwayParts.westSouthDoor.GetComponent<DoorHandler>()
+                    .SetScene(sceneList[0], buildScenes.IndexOf(sceneList[0]));
                 secondaryHallwayParts.eastSouthDoor.SetActive(false);
 
                 // Check if the hallway has a north door
@@ -46,8 +56,8 @@ namespace Custom.Scripts.Hallway
                 {
 
                     secondaryHallwayParts.westNorthDoor.SetActive(true);
-                    secondaryHallwayParts.westNorthDoor.GetComponent<DoorSceneSwitchScript>()
-                        .SetScene(sceneList[1]);
+                    secondaryHallwayParts.westNorthDoor.GetComponent<DoorHandler>()
+                        .SetScene(sceneList[1], buildScenes.IndexOf(sceneList[1]));
                 }
                 else
                 {
@@ -59,21 +69,22 @@ namespace Custom.Scripts.Hallway
             {
                 secondaryHallwayParts.westSouthDoor.SetActive(false);
                 secondaryHallwayParts.eastSouthDoor.SetActive(true);
-                secondaryHallwayParts.eastSouthDoor.GetComponent<DoorSceneSwitchScript>().SetScene(sceneList[0]);
+                secondaryHallwayParts.eastSouthDoor.GetComponent<DoorHandler>().SetScene(sceneList[0], buildScenes.IndexOf(sceneList[0]));
 
                 secondaryHallwayParts.westNorthDoor.SetActive(false);
                 // Check if the hallway has a north door
                 if (sceneList.Count > 1)
                 {
                     secondaryHallwayParts.eastNorthDoor.SetActive(true);
-                    secondaryHallwayParts.eastNorthDoor.GetComponent<DoorSceneSwitchScript>()
-                        .SetScene(sceneList[1]);
+                    secondaryHallwayParts.eastNorthDoor.GetComponent<DoorHandler>()
+                        .SetScene(sceneList[1], buildScenes.IndexOf(sceneList[1]));
                 }
                 else
                 {
                     secondaryHallwayParts.eastNorthDoor.SetActive(false);
                 }
             }
+#endif
         }
 
         private void SetWalls()
@@ -87,6 +98,19 @@ namespace Custom.Scripts.Hallway
             {
                 secondaryHallwayParts.westWall.SetActive(false);
                 secondaryHallwayParts.eastWall.SetActive(isDeadEnded);
+            }
+        }
+        
+        private void SetUiCamera()
+        {
+            var canvasList = gameObject.GetComponentsInChildren<Canvas>();
+            foreach (var canvas in canvasList)
+            {
+                if (canvas.renderMode == RenderMode.WorldSpace)
+                {
+                    canvas.worldCamera = vrCamera;
+                    canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.None;
+                }
             }
         }
 

@@ -15,6 +15,8 @@ namespace Custom.Scripts
         private int numberOfSecondaryHallwaysPerPrimaryHallwaySide = 2;
         [SerializeField]
         private List<SceneReference> experimentScenes;
+        [SerializeField]
+        private Camera vrCamera;
 
         [SerializeField]
         private PrimaryHallwayGenerator primaryHallwayPrefab;
@@ -130,7 +132,8 @@ namespace Custom.Scripts
 
                     // Set the configuration for the primary hallway and generate the secondary hallways for each side
                     primaryHallway.SetHallwayConfig(isFirstBuildingPrimaryHallway, isLastFloorPrimaryHallway,
-                        isFirstFloorPrimaryHallway, isNotFirstFloor, hasHoledCeiling, westSideScenes, eastSideScenes);
+                        isFirstFloorPrimaryHallway, isNotFirstFloor, hasHoledCeiling, westSideScenes, eastSideScenes,
+                        vrCamera);
                 }
             }
 

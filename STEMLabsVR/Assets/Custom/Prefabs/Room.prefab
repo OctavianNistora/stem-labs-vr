@@ -2691,6 +2691,14 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 0.2910522
       objectReference: {fileID: 0}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: sceneToLoad.scenePath
+      value: Assets/Scenes/Hallway.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: sceneToLoad.sceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: c8272aefbec003d40a323a0fdccd9aa0, type: 3}
     - target: {fileID: 1620948397055853873, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_Size.y
       value: -0.2910521
@@ -2936,6 +2944,14 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: -0.2910522
       objectReference: {fileID: 0}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: sceneToLoad.scenePath
+      value: Assets/Scenes/Hallway.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 1529973450482129184, guid: 974004511431a654c92484f9c1132126, type: 3}
+      propertyPath: sceneToLoad.sceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: c8272aefbec003d40a323a0fdccd9aa0, type: 3}
     - target: {fileID: 1991501574664475786, guid: 974004511431a654c92484f9c1132126, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.5
