@@ -137,16 +137,16 @@ public class LaboratoryService(MainDbContext context) : ILaboratoryService
         };
     }
 
-    public async Task<IEnumerable<string>> GetLaboratorySteps(int id, CancellationToken cancellationToken)
+    public async Task<IEnumerable<string>> GetLaboratorySteps(int sceneId, CancellationToken cancellationToken)
     {
-        var laboratory = await context.Laboratories.FindAsync([id], cancellationToken);
+        var laboratory = await context.Laboratories.FirstOrDefaultAsync(l => l.SceneId == sceneId, cancellationToken);
         if (laboratory == null)
         {
             return [];
         }
         
         var checklistSteps = await context.LaboratoryChecklistSteps
-            .Where(step => step.LaboratoryId == id)
+            .Where(step => step.LaboratoryId == laboratory.Id)
             .GroupBy(step => step.StepNumber,
                 (stepNumber, group) => group.OrderByDescending(step => step.Version).First())
             .ToListAsync(cancellationToken);

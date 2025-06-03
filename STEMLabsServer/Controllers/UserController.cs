@@ -228,7 +228,7 @@ namespace STEMLabsServer.Controllers
         
         [HttpGet("{userId}/related-laboratories/{labId}/sessions")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<RelatedSessionDto>>> GetRelatedSessions([FromRoute] int userId, [FromRoute] int labId, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<IdDateDto>>> GetRelatedSessions([FromRoute] int userId, [FromRoute] int labId, CancellationToken cancellationToken)
         {
             if (HttpContext.User.Identity is not ClaimsIdentity identity)
             {

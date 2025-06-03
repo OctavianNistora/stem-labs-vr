@@ -2,9 +2,10 @@
 
 namespace STEMLabsServer.Shared;
 
+// Generates a random string of a specified length using lowercase letters, uppercase letters, and digits.
 public class RandomStringGenerator
 {
-    private const string Pool = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private const string Pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         
     public static string Generate(int length)
     {

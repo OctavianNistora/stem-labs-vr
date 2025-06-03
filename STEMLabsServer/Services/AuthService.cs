@@ -14,8 +14,16 @@ namespace STEMLabsServer.Services;
 
 public class AuthService(MainDbContext context) : IAuthService
 {
-    private readonly int _tokenExpiryMinutesWithoutRefreshToken = 135;
-    private readonly int _tokenExpiryMinutesWithRefreshToken = 5;
+    private const int TokenExpiryMinutesWithoutRefreshToken = 135;
+    private const int TokenExpiryMinutesWithRefreshToken = 1;
+
+    private static readonly SymmetricSecurityKey JwtSecurityKey = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_TOKEN_KEY") ??
+                               throw new InvalidOperationException("JWT_TOKEN_KEY is not set.")));
+    private static readonly string JwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ??
+                                                throw new InvalidOperationException("JWT_ISSUER is not set.");
+    private static readonly string JwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ??
+                                                  throw new InvalidOperationException("JWT_AUDIENCE is not set.");
     
     public async Task<AuthResponseDto?> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken)
     {
@@ -39,11 +47,11 @@ public class AuthService(MainDbContext context) : IAuthService
         }
 
         string refreshTokenString = "";
-        int expiryMinutes = _tokenExpiryMinutesWithoutRefreshToken;
+        int expiryMinutes = TokenExpiryMinutesWithoutRefreshToken;
         if (userLoginDto.RespondWithRefreshToken)
         {
             refreshTokenString = await CreateAndStoreNewRefreshTokenAsync(user, cancellationToken);
-            expiryMinutes = _tokenExpiryMinutesWithRefreshToken;
+            expiryMinutes = TokenExpiryMinutesWithRefreshToken;
         }
         
         var accessToken = CreateAccessToken(user, expiryMinutes);
@@ -72,7 +80,7 @@ public class AuthService(MainDbContext context) : IAuthService
         string newRefreshToken = await ModifyExistingRefreshTokenAsync(token, cancellationToken);
         
         var user = token.User;
-        var accessToken = CreateAccessToken(user, _tokenExpiryMinutesWithRefreshToken);
+        var accessToken = CreateAccessToken(user, TokenExpiryMinutesWithRefreshToken);
         
         return new AuthResponseDto
         {
@@ -93,17 +101,15 @@ public class AuthService(MainDbContext context) : IAuthService
             new Claim(ClaimTypes.Role, user.UserRole.ToString())
         };
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_TOKEN_KEY")!));
-
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+        var credentials = new SigningCredentials(JwtSecurityKey, SecurityAlgorithms.HmacSha512);
 
         var tokenDescriptor = new JwtSecurityToken(
-            issuer: Environment.GetEnvironmentVariable("JWT_ISSUER"),
-            audience: Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+            issuer: JwtIssuer,
+            audience: JwtAudience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(135),
-            signingCredentials: creds
+            notBefore: DateTime.UtcNow,
+            expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+            signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);

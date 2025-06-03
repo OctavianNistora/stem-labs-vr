@@ -8,6 +8,7 @@ using STEMLabsServer.Shared;
 
 namespace STEMLabsServer.Services;
 
+// Service for managing user-related operations
 public class UserService(MainDbContext context) : IUserService
 {
     public async Task<ServiceStatus> RegisterUser(UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
@@ -25,6 +26,7 @@ public class UserService(MainDbContext context) : IUserService
             return new ServiceStatus(false, "Email already registered.");
         }
 
+        // Generate a semi-random username and password since the account isn't created by the actual user
         string username;
         do
         {
@@ -78,7 +80,20 @@ public class UserService(MainDbContext context) : IUserService
             return null;
         }
         
-        var relatedLaboratories = await context.StudentLaboratoryReports
+        // Get laboratories from sessions created by the user
+        var relatedLaboratoriesFromSessions = await context.LaboratorySessions
+            .Where(session => session.CreatedById == userId)
+            .Include(session => session.Laboratory)
+            .Select(session => new RelatedLaboratoryDto
+            {
+                Id = session.Laboratory.Id,
+                Name = session.Laboratory.Name,
+            })
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        
+        // Get laboratories from reports submitted by the user
+        var relatedLaboratoriesFromReports = await context.StudentLaboratoryReports
             .Where(report => report.StudentId == userId)
             .Include(laborator => laborator.LaboratorySession)
             .ThenInclude(session => session.Laboratory)
@@ -87,10 +102,13 @@ public class UserService(MainDbContext context) : IUserService
                 Id = report.LaboratorySession.LaboratoryId,
                 Name = report.LaboratorySession.Laboratory.Name,
             })
-            .DistinctBy(laboratory => laboratory.Id)
+            .Distinct()
             .ToListAsync(cancellationToken);
         
-        return relatedLaboratories;
+        return relatedLaboratoriesFromSessions
+            .Union(relatedLaboratoriesFromReports)
+            .Distinct()
+            .ToList();
     }
     
     public async Task<ServiceStatus> UpdateUserRole(int userId, string newRole, CancellationToken cancellationToken)
@@ -108,23 +126,25 @@ public class UserService(MainDbContext context) : IUserService
         return new ServiceStatus(true);
     }
 
-    public async Task<IEnumerable<RelatedSessionDto>?> GetRelatedSessions(int userId, int labId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<IdDateDto>?> GetRelatedSessions(int userId, int labId, CancellationToken cancellationToken)
     {
+        // Retrieve sessions created by the user for the specified laboratory
         var laboratorySessionsCreated = context.LaboratorySessions
             .Where(session => session.LaboratoryId == labId && session.CreatedById == userId)
-            .Select(session => new RelatedSessionDto
+            .Select(session => new IdDateDto
             {
                 Id = session.Id,
-                DateCreated = session.CreatedAt,
+                Date = session.CreatedAt,
             });
         
+        // Retrieve sessions the user has participated in for the specified laboratory
         var laboratorySessionsParticipated = context.StudentLaboratoryReports
             .Where(report => report.StudentId == userId && report.LaboratorySession.LaboratoryId == labId)
             .Include(report => report.LaboratorySession)
-            .Select(report => new RelatedSessionDto
+            .Select(report => new IdDateDto
             {
                 Id = report.LaboratorySession.Id,
-                DateCreated = report.LaboratorySession.CreatedAt,
+                Date = report.LaboratorySession.CreatedAt,
             });
         
         var relatedSessions = await laboratorySessionsCreated 

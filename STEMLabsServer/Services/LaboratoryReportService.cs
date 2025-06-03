@@ -11,12 +11,23 @@ namespace STEMLabsServer.Services;
 
 public class LaboratoryReportService(MainDbContext context): ILaboratoryReportService
 {
-    private static readonly AmazonS3Client S3Client = new AmazonS3Client(new BasicAWSCredentials(Environment.GetEnvironmentVariable("R2_ACCESS_KEY"), Environment.GetEnvironmentVariable("R2_SECRET_KEY")), new AmazonS3Config
-    {
-        ServiceURL = Environment.GetEnvironmentVariable("R2_SERVICE_URL"),
-        RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
-        ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED,
-    });
+    private static readonly AmazonS3Client S3Client = new AmazonS3Client(
+        new BasicAWSCredentials(
+            Environment.GetEnvironmentVariable("R2_ACCESS_KEY") ??
+            throw new InvalidOperationException("R2_ACCESS_KEY is not set."),
+            Environment.GetEnvironmentVariable("R2_SECRET_KEY") ??
+            throw new InvalidOperationException("R2_SECRET_KEY is not set.")),
+        new AmazonS3Config
+        {
+            ServiceURL = Environment.GetEnvironmentVariable("R2_SERVICE_URL") ??
+                         throw new InvalidOperationException("R2_SERVICE_URL is not set."),
+            RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
+            ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED,
+        });
+    private static readonly string R2BucketName = Environment.GetEnvironmentVariable("R2_BUCKET_NAME") ??
+        throw new InvalidOperationException("R2_BUCKET_NAME is not set.");
+    private static readonly string R2PublicUrl = Environment.GetEnvironmentVariable("R2_PUBLIC_URL") ??
+        throw new InvalidOperationException("R2_PUBLIC_URL is not set.");
     
     public async Task<bool> AddLaboratoryReport(SubmittedLaboratoryReportDto submittedLaboratoryReportDto,
         CancellationToken cancellationToken)
@@ -31,7 +42,7 @@ public class LaboratoryReportService(MainDbContext context): ILaboratoryReportSe
 
         var laboratorySession =
             await context.LaboratorySessions.FirstOrDefaultAsync(
-                lab => lab.InviteCode == submittedLaboratoryReportDto.InvitedCode,
+                lab => lab.InviteCode == submittedLaboratoryReportDto.InvitedCode && lab.CreatedAt > DateTime.UtcNow.AddHours(-12),
                 cancellationToken);
         if (laboratorySession == null)
         {
@@ -51,14 +62,14 @@ public class LaboratoryReportService(MainDbContext context): ILaboratoryReportSe
             {
                 var putRequest = new PutObjectRequest
                 {
-                    BucketName = Environment.GetEnvironmentVariable("R2_BUCKET_NAME"),
+                    BucketName = R2BucketName,
                     Key = imageKey,
                     InputStream = stream,
                     DisablePayloadSigning = true
                 };
                 await S3Client.PutObjectAsync(putRequest, cancellationToken);
             }
-            laboratoryReport.ObservationsImageLink = $"{Environment.GetEnvironmentVariable("R2_PUBLIC_URL")}/{imageKey}";
+            laboratoryReport.ObservationsImageLink = $"{R2PublicUrl}/{imageKey}";
         }
 
         await context.StudentLaboratoryReports.AddAsync(laboratoryReport, cancellationToken);

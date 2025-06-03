@@ -18,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MainDbContext>(options =>
 {
-    options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_STRING"));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_STRING") ?? 
+                      throw new InvalidOperationException("DATABASE_STRING is not set."));
     options.UseSeeding((context, _) =>
     {
         var adminsExists = context.Set<User>().Any(user => user.UserRole == UserRole.Admin);
@@ -26,15 +27,19 @@ builder.Services.AddDbContext<MainDbContext>(options =>
         {
             context.Set<User>().Add(new User
             {
-                Username = Environment.GetEnvironmentVariable("ADMIN_USERNAME")!,
-                PasswordHashed = new PasswordHasher<User>().HashPassword(null!, Environment.GetEnvironmentVariable("ADMIN_PASSWORD")!),
-                Email = Environment.GetEnvironmentVariable("ADMIN_EMAIL")!,
+                Username = Environment.GetEnvironmentVariable("ADMIN_USERNAME") ?? 
+                           throw new InvalidOperationException("ADMIN_USERNAME is not set."),
+                PasswordHashed = new PasswordHasher<User>().HashPassword(null!,
+                    Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? 
+                    throw new InvalidOperationException("ADMIN_PASSWORD is not set.")),
+                Email = Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? 
+                        throw new InvalidOperationException("ADMIN_EMAIL is not set."),
                 FirstName = "Preset",
                 LastName = "Admin",
-                PhoneNumber = Environment.GetEnvironmentVariable("ADMIN_PHONE")!,
+                PhoneNumber = Environment.GetEnvironmentVariable("ADMIN_PHONE") ?? 
+                              throw new InvalidOperationException("ADMIN_PHONE is not set."),
                 UserRole = UserRole.Admin,
-                IsVerified = true,
-                DateCreated = new DateTime(2025, 4, 20, 12, 0, 0, DateTimeKind.Utc)
+                IsVerified = true, DateCreated = new DateTime(2025, 4, 20, 12, 0, 0, DateTimeKind.Utc)
             });
         }
 
@@ -100,7 +105,7 @@ builder.Services.AddDbContext<MainDbContext>(options =>
                 professor1 = new User
                 {
                     Username = "professorUsername1",
-                    PasswordHashed = new PasswordHasher<User>().HashPassword(null!, "teacherPassword1"),
+                    PasswordHashed = new PasswordHasher<User>().HashPassword(null!, "professorPassword1"),
                     Email = "professor1.email@email-address.com",
                     FirstName = "Preset1",
                     LastName = "Professor",
@@ -441,12 +446,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+            ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ??
+                          throw new InvalidOperationException("JWT_ISSUER is not set."),
             ValidateAudience = true,
-            ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+            ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? 
+                            throw new InvalidOperationException("JWT_AUDIENCE is not set."),
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_TOKEN_KEY") ?? throw new InvalidOperationException())),
+                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_TOKEN_KEY") ??
+                                       throw new InvalidOperationException())),
             ValidateIssuerSigningKey = true
         };
     });

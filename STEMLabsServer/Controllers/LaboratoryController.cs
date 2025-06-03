@@ -56,11 +56,11 @@ namespace STEMLabsServer.Controllers
             return Ok(laboratory);
         }
         
-        [HttpGet("{id}/steps")]
+        [HttpGet("{sceneId}/steps")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<string>>> GetLaboratorySteps([FromRoute] int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<string>>> GetLaboratorySteps([FromRoute] int sceneId, CancellationToken cancellationToken)
         {
-            var steps = await laboratoryService.GetLaboratorySteps(id, cancellationToken);
+            var steps = await laboratoryService.GetLaboratorySteps(sceneId, cancellationToken);
             if (!steps.Any())
             {
                 return NotFound("No steps found for this laboratory.");
