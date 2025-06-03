@@ -1,7 +1,6 @@
 ﻿import { type ChangeEvent, useContext, useState } from "react";
 import { ToastContext } from "../../../layouts/ToastLayout.tsx";
 import { AuthContext } from "../../../contexts/AuthContext.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../../../helpers/ToastErrorMessageHandle.tsx";
 import {
   Box,
@@ -10,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { axiosRequestWithAutoReauth } from "../../../helpers/axiosRequestWithAutoReauth.tsx";
 
 type GenerateRecoveryCodeSectionProps = {
   setUsernameParent: (username: string) => void;
@@ -32,12 +32,15 @@ export default function GenerateRecoveryCodeSection({
   function handleSubmit() {
     setIsSubmitting(true);
 
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/api/recovery/password-request`,
-        username,
-        { headers: { "Content-Type": "application/json" } },
-      )
+    axiosRequestWithAutoReauth(
+      {
+        method: "POST",
+        url: `${import.meta.env.VITE_API_URL}/api/recovery/password-request`,
+        data: username,
+        headers: { "Content-Type": "application/json" },
+      },
+      setUser,
+    )
       .then(() => {
         setUsernameParent(username);
       })

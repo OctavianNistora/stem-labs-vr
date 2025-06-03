@@ -6,11 +6,11 @@
   Typography,
 } from "@mui/material";
 import { useContext, useState, type MouseEvent } from "react";
-import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import { Link, useNavigate } from "react-router";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -27,8 +27,14 @@ export default function LoginPage() {
       respondWithRefreshToken: true,
     };
     setIsAuthenticating(true);
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/auth/session`, data)
+    axiosRequestWithAutoReauth(
+      {
+        method: "POST",
+        url: `${import.meta.env.VITE_API_URL}/api/auth/session`,
+        data: data,
+      },
+      setUser,
+    )
       .then((res) => {
         const { uid, accessToken, refreshToken, role } = res.data;
         localStorage.setItem("refreshToken", refreshToken);

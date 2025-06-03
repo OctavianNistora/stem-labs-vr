@@ -9,7 +9,7 @@
 import axios from "axios";
 import { Outlet } from "react-router";
 
-type User = {
+export type User = {
   uid: string;
   accessToken: string;
   role: "student" | "professor" | "admin";

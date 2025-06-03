@@ -11,12 +11,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate, useParams } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import isStringPositiveInteger from "../helpers/isStringPositiveInteger.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import type { IdDate } from "../types/IdDate.tsx";
 import dateToFormattedString from "../helpers/dateToFormatedString.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 type ChecklistStep = {
   statement: string;
@@ -71,13 +71,15 @@ export default function ViewRelatedReportPage() {
 
   async function fetchReportsList() {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/laboratory-sessions/${sessionId}/participants/${userId}/reports`,
+      const response = await axiosRequestWithAutoReauth(
         {
+          method: "GET",
+          url: `${import.meta.env.VITE_API_URL}/api/laboratory-sessions/${sessionId}/participants/${userId}/reports`,
           headers: {
             Authorization: `Bearer ${user?.accessToken}`,
           },
         },
+        setUser,
       );
 
       setReportTabList(
@@ -95,13 +97,15 @@ export default function ViewRelatedReportPage() {
 
   async function fetchReportDetails() {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/laboratory-reports/${reportId}`,
+      const response = await axiosRequestWithAutoReauth(
         {
+          method: "GET",
+          url: `${import.meta.env.VITE_API_URL}/api/laboratory-reports/${reportId}`,
           headers: {
             Authorization: `Bearer ${user?.accessToken}`,
           },
         },
+        setUser,
       );
 
       const reportDetails: ReportDetails = {
@@ -138,7 +142,10 @@ export default function ViewRelatedReportPage() {
     >
       <Box width="100%" display="flex">
         <Box width={0} height={40} display="flex" flexDirection="row-reverse">
-          <IconButton component={Link} to={".."}>
+          <IconButton
+            component={Link}
+            to={user?.role.toLowerCase() === "student" ? "../.." : `..`}
+          >
             <ArrowBackIcon />
           </IconButton>
         </Box>

@@ -7,7 +7,6 @@
   Select,
   TextField,
 } from "@mui/material";
-import axios from "axios";
 import { useContext, useState, type ChangeEvent } from "react";
 import { isMobilePhone } from "validator";
 import { useNavigate } from "react-router";
@@ -15,6 +14,7 @@ import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx"
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import isEmail from "validator/lib/isEmail";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 type SelectOption = {
   value: string;
@@ -80,12 +80,17 @@ export default function AddUserPage() {
     };
 
     setIsSubmitting(true);
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/users`, data, {
+    axiosRequestWithAutoReauth(
+      {
+        method: "POST",
+        url: `${import.meta.env.VITE_API_URL}/api/users`,
+        data: data,
         headers: {
           Authorization: `Bearer ${user?.accessToken}`,
         },
-      })
+      },
+      setUser,
+    )
       .then((_) => {
         addToast({
           message: "User added successfully",

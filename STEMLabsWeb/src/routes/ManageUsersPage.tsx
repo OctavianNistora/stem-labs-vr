@@ -3,11 +3,11 @@ import { DataGrid, type GridColDef, useGridApiRef } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { Link } from "react-router";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 type userRowType = {
   uid: number;
@@ -31,12 +31,16 @@ export default function ManageUsersPage() {
       return;
     }
 
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/users`, {
+    axiosRequestWithAutoReauth(
+      {
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/api/users`,
         headers: {
           Authorization: `Bearer ${user.accessToken}`,
         },
-      })
+      },
+      setUser,
+    )
       .then((response) => {
         const rowsData = response.data.map((user: any) => ({
           uid: user.uid,
@@ -70,13 +74,18 @@ export default function ManageUsersPage() {
         row.uid === uid ? { ...row, isUpdating: true } : row,
       ),
     );
-    axios
-      .put(`${import.meta.env.VITE_API_URL}/api/users/${uid}/role`, role, {
+    axiosRequestWithAutoReauth(
+      {
+        method: "PUT",
+        url: `${import.meta.env.VITE_API_URL}/api/users/${uid}/role`,
+        data: role,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user?.accessToken}`,
         },
-      })
+      },
+      setUser,
+    )
       .then((_) => {
         setRows((prevRows) =>
           prevRows.map((row) =>
@@ -106,12 +115,16 @@ export default function ManageUsersPage() {
         row.uid === uid ? { ...row, isUpdating: true } : row,
       ),
     );
-    axios
-      .delete(`${import.meta.env.VITE_API_URL}/api/users/${uid}`, {
+    axiosRequestWithAutoReauth(
+      {
+        method: "DELETE",
+        url: `${import.meta.env.VITE_API_URL}/api/users/${uid}`,
         headers: {
           Authorization: `Bearer ${user?.accessToken}`,
         },
-      })
+      },
+      setUser,
+    )
       .then((_) => {
         setRows((prevRows) => prevRows.filter((row) => row.uid !== uid));
         addToast({

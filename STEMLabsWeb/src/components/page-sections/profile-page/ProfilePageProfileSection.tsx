@@ -7,12 +7,12 @@
 } from "react";
 import { ToastContext } from "../../../layouts/ToastLayout.tsx";
 import { AuthContext } from "../../../contexts/AuthContext.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../../../helpers/ToastErrorMessageHandle.tsx";
 import { Button, CircularProgress, Stack } from "@mui/material";
 import type { ProfileDto } from "../../../types/ProfileDto.tsx";
 import { ProfileStyledTextField } from "../../ProfileStyledMUIComponents.tsx";
 import { isMobilePhone } from "validator";
+import { axiosRequestWithAutoReauth } from "../../../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function ProfilePageProfileSection() {
   const [firstName, setFirstName] = useState("");
@@ -30,15 +30,16 @@ export default function ProfilePageProfileSection() {
       return;
     }
 
-    axios
-      .get<ProfileDto>(
-        `${import.meta.env.VITE_API_URL}/api/users/${user.uid}/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
+    axiosRequestWithAutoReauth<ProfileDto>(
+      {
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/api/users/${user.uid}/profile`,
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
         },
-      )
+      },
+      setUser,
+    )
       .then((response) => {
         const { firstName, lastName, phoneNumber } = response.data;
 
@@ -82,16 +83,17 @@ export default function ProfilePageProfileSection() {
       };
 
       setIsSubmitting(true);
-      axios
-        .put(
-          `${import.meta.env.VITE_API_URL}/api/users/${user?.uid}/profile`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.accessToken}`,
-            },
+      axiosRequestWithAutoReauth(
+        {
+          method: "PUT",
+          url: `${import.meta.env.VITE_API_URL}/api/users/${user?.uid}/profile`,
+          data: data,
+          headers: {
+            Authorization: `Bearer ${user?.accessToken}`,
           },
-        )
+        },
+        setUser,
+      )
         .then(() => {})
         .catch((error) => {
           setFirstName(lastKnownProfileData.current?.firstName || "");

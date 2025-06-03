@@ -10,11 +10,11 @@ import { useContext, useEffect, useState } from "react";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import isStringPositiveInteger from "../helpers/isStringPositiveInteger.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
 import TitleWithBackButton from "../components/TitleWithBackButton.tsx";
 import Divider from "@mui/material/Divider";
 import type { IdNameDate } from "../types/IdNameDate.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function ViewRelatedReportsListPage() {
   const { sessionId } = useParams();
@@ -38,13 +38,15 @@ export default function ViewRelatedReportsListPage() {
     }
 
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/laboratory-sessions/${sessionId}/participants`,
+      const response = await axiosRequestWithAutoReauth(
         {
+          method: "GET",
+          url: `${import.meta.env.VITE_API_URL}/api/laboratory-sessions/${sessionId}/participants`,
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
           },
         },
+        setUser,
       );
 
       setParticipants(

@@ -2,7 +2,6 @@
 import { useNavigate } from "react-router";
 import { ToastContext } from "../../../layouts/ToastLayout.tsx";
 import { AuthContext } from "../../../contexts/AuthContext.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../../../helpers/ToastErrorMessageHandle.tsx";
 import {
   Box,
@@ -11,6 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { axiosRequestWithAutoReauth } from "../../../helpers/axiosRequestWithAutoReauth.tsx";
 
 type ResetPasswordSectionProps = {
   username: string;
@@ -53,12 +53,15 @@ export default function ResetPasswordSection({
     };
 
     setIsSubmitting(true);
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/api/recovery/password-reset`,
-        data,
-        { headers: { "Content-Type": "application/json" } },
-      )
+    axiosRequestWithAutoReauth(
+      {
+        method: "POST",
+        url: `${import.meta.env.VITE_API_URL}/api/recovery/password-reset`,
+        data: data,
+        headers: { "Content-Type": "application/json" },
+      },
+      setUser,
+    )
       .then(() => {
         addToast({
           message: "Password reset successfully.",

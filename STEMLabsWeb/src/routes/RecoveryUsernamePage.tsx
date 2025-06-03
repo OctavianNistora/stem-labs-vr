@@ -6,11 +6,11 @@
   Typography,
 } from "@mui/material";
 import { type ChangeEvent, useContext, useState } from "react";
-import axios from "axios";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { useNavigate } from "react-router";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function RecoveryUsernamePage() {
   const [email, setEmail] = useState("");
@@ -28,16 +28,17 @@ export default function RecoveryUsernamePage() {
   function handleSubmit() {
     setIsSubmitting(true);
 
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/api/recovery/username-reminder`,
-        email,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    axiosRequestWithAutoReauth(
+      {
+        method: "post",
+        url: `${import.meta.env.VITE_API_URL}/api/recovery/username-reminder`,
+        data: email,
+        headers: {
+          "Content-Type": "application/json",
         },
-      )
+      },
+      setUser,
+    )
       .then(() => {
         addToast({
           message: "A recovery email has been sent to your email address.",

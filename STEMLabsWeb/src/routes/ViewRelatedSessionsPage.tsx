@@ -12,10 +12,10 @@ import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import type { IdDate } from "../types/IdDate.tsx";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
-import axios from "axios";
 import isStringPositiveInteger from "../helpers/isStringPositiveInteger.tsx";
 import TitleWithBackButton from "../components/TitleWithBackButton.tsx";
 import dateToFormattedString from "../helpers/dateToFormatedString.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function ViewRelatedSessionsPage() {
   const { laboratoryId } = useParams();
@@ -40,22 +40,26 @@ export default function ViewRelatedSessionsPage() {
     try {
       let response;
       if (user.role.toLowerCase() === "admin") {
-        response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/laboratories/${laboratoryId}/sessions`,
+        response = await axiosRequestWithAutoReauth(
           {
+            method: "GET",
+            url: `${import.meta.env.VITE_API_URL}/api/laboratories/${laboratoryId}/sessions`,
             headers: {
               Authorization: `Bearer ${user.accessToken}`,
             },
           },
+          setUser,
         );
       } else {
-        response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/${user.uid}/related-laboratories/${laboratoryId}/sessions`,
+        response = await axiosRequestWithAutoReauth(
           {
+            method: "GET",
+            url: `${import.meta.env.VITE_API_URL}/api/users/${user.uid}/related-laboratories/${laboratoryId}/sessions`,
             headers: {
               Authorization: `Bearer ${user.accessToken}`,
             },
           },
+          setUser,
         );
       }
 
@@ -93,7 +97,9 @@ export default function ViewRelatedSessionsPage() {
                     component={Link}
                     to={
                       session.id +
-                      (user?.role == "student" ? `/${user.uid}` : "")
+                      (user?.role.toLowerCase() == "student"
+                        ? `/${user.uid}`
+                        : "")
                     }
                   >
                     <ListItemText

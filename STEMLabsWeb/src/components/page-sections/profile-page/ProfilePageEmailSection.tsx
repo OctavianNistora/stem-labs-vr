@@ -1,11 +1,11 @@
 ﻿import { type ChangeEvent, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { Button, CircularProgress, Stack, TextField } from "@mui/material";
 import { ToastContext } from "../../../layouts/ToastLayout.tsx";
 import { AuthContext } from "../../../contexts/AuthContext.tsx";
 import { toastErrorMessageHandle } from "../../../helpers/ToastErrorMessageHandle.tsx";
 import { ProfileStyledTextField } from "../../ProfileStyledMUIComponents.tsx";
 import isEmail from "validator/lib/isEmail";
+import { axiosRequestWithAutoReauth } from "../../../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function ProfilePageEmailSection() {
   const [currentEmail, setCurrentEmail] = useState(" ");
@@ -20,15 +20,16 @@ export default function ProfilePageEmailSection() {
       return;
     }
 
-    axios
-      .get<string>(
-        `${import.meta.env.VITE_API_URL}/api/users/${user.uid}/email`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
+    axiosRequestWithAutoReauth(
+      {
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/api/users/${user.uid}/email`,
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
         },
-      )
+      },
+      setUser,
+    )
       .then((response) => {
         setCurrentEmail(response.data);
       })
@@ -52,16 +53,17 @@ export default function ProfilePageEmailSection() {
     };
 
     setIsSubmitting(true);
-    axios
-      .put(
-        `${import.meta.env.VITE_API_URL}/api/users/${user?.uid}/email`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.accessToken}`,
-          },
+    axiosRequestWithAutoReauth(
+      {
+        method: "PUT",
+        url: `${import.meta.env.VITE_API_URL}/api/users/${user?.uid}/email`,
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user?.accessToken}`,
         },
-      )
+      },
+      setUser,
+    )
       .then(() => {
         addToast({
           message: "Email updated successfully",

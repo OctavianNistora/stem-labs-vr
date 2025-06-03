@@ -1,9 +1,9 @@
 ﻿import { type ChangeEvent, useContext, useState } from "react";
 import { ToastContext } from "../../../layouts/ToastLayout.tsx";
 import { AuthContext } from "../../../contexts/AuthContext.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../../../helpers/ToastErrorMessageHandle.tsx";
 import { Button, CircularProgress, Stack, TextField } from "@mui/material";
+import { axiosRequestWithAutoReauth } from "../../../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function ProfilePagePasswordSection() {
   const [newPassword, setNewPassword] = useState("");
@@ -34,16 +34,17 @@ export default function ProfilePagePasswordSection() {
     };
 
     setIsSubmitting(true);
-    axios
-      .put(
-        `${import.meta.env.VITE_API_URL}/api/users/${user?.uid}/password`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.accessToken}`,
-          },
+    axiosRequestWithAutoReauth(
+      {
+        method: "PUT",
+        url: `${import.meta.env.VITE_API_URL}/api/users/${user?.uid}/password`,
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user?.accessToken}`,
         },
-      )
+      },
+      setUser,
+    )
       .then(() => {
         addToast({
           message: "Password updated successfully",

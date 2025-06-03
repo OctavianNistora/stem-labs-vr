@@ -8,13 +8,13 @@ import {
   TextField,
 } from "@mui/material";
 import { type ChangeEvent, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import isStringPositiveInteger from "../helpers/isStringPositiveInteger.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 export default function ManageLaboratoryPage() {
   const [name, setName] = useState("");
@@ -38,12 +38,16 @@ export default function ManageLaboratoryPage() {
       return;
     }
 
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/laboratories/${laboratoryId}`, {
+    axiosRequestWithAutoReauth(
+      {
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/api/laboratories/${laboratoryId}`,
         headers: {
           Authorization: `Bearer ${user?.accessToken}`,
         },
-      })
+      },
+      setUser,
+    )
       .then((response) => {
         const lab = response.data;
         setName(lab.name);
@@ -85,12 +89,17 @@ export default function ManageLaboratoryPage() {
 
     setIsSubmitting(true);
     if (laboratoryId == "-1") {
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/api/laboratories`, data, {
+      axiosRequestWithAutoReauth(
+        {
+          method: "POST",
+          url: `${import.meta.env.VITE_API_URL}/api/laboratories`,
+          data: data,
           headers: {
             Authorization: `Bearer ${user?.accessToken}`,
           },
-        })
+        },
+        setUser,
+      )
         .then(() => {
           navigate("..");
         })
@@ -101,16 +110,17 @@ export default function ManageLaboratoryPage() {
           setIsSubmitting(false);
         });
     } else {
-      axios
-        .put(
-          `${import.meta.env.VITE_API_URL}/api/laboratories/${laboratoryId}`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.accessToken}`,
-            },
+      axiosRequestWithAutoReauth(
+        {
+          method: "PUT",
+          url: `${import.meta.env.VITE_API_URL}/api/laboratories/${laboratoryId}`,
+          data: data,
+          headers: {
+            Authorization: `Bearer ${user?.accessToken}`,
           },
-        )
+        },
+        setUser,
+      )
         .then(() => {
           navigate("..");
         })

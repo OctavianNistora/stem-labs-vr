@@ -9,8 +9,8 @@ import { Link, useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { ToastContext } from "../layouts/ToastLayout.tsx";
 import { AuthContext } from "../contexts/AuthContext.tsx";
-import axios from "axios";
 import { toastErrorMessageHandle } from "../helpers/ToastErrorMessageHandle.tsx";
+import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
 type laboratoryRowType = {
   id: number;
@@ -55,12 +55,16 @@ export default function ViewLaboratoriesPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/laboratories`, {
+    axiosRequestWithAutoReauth(
+      {
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/api/laboratories`,
         headers: {
           Authorization: `Bearer ${user?.accessToken}`,
         },
-      })
+      },
+      setUser,
+    )
       .then((response) => {
         const rowsData = response.data.map((lab: any) => ({
           id: lab.id,
