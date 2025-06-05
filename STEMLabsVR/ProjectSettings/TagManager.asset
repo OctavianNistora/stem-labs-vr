@@ -10,6 +10,7 @@ TagManager:
   - Ring
   - Drawing
   - FilterRendererBounds
+  - UIExperimentName
   layers:
   - Default
   - TransparentFX

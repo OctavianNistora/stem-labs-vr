@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Custom.Scripts.ExperimentGeneral;
 using UnityEngine;
-namespace Custom.Scripts.Helper
+
+namespace Custom.Scripts.Data.ScriptableObjects
 {
     // This class is used to store the experiment description data.
     [CreateAssetMenu(fileName = "ExperimentDescriptionData", menuName = "ScriptableObjects/ExperimentDescriptionData")]
@@ -21,6 +22,8 @@ namespace Custom.Scripts.Helper
         private List<ExperimentDescriptionType> experimentDescriptionTypesOrder;
         [SerializeField]
         private int experimentStepsFontSize;
+        [SerializeField]
+        private List<string> experimentSteps;
 
         // Method that retrieves all the clipboard data for the experiment in the correct format.
         public ExperimentClipboardData ExperimentClipboardData()
@@ -50,6 +53,7 @@ namespace Custom.Scripts.Helper
             }
         
             experimentClipboardData.stepsFontSize = experimentDescriptionTextFontSize;
+            experimentClipboardData.steps = new List<string>(experimentSteps);
         
             return experimentClipboardData;
         }

@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Custom.Scripts.Data.ScriptableObjects;
+using Custom.Scripts.Data.Static;
 using Custom.Scripts.Helper;
+using Custom.Scripts.UI;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -33,6 +37,7 @@ namespace Custom.Scripts.ExperimentGeneral
         private readonly string _paragraphPrefix = "    ";
         private List<Page> _checkListPages;
         private bool[] _stepsCompletedArray;
+        private DateTime _startTime;
 
         public override void OnNetworkSpawn()
         {
@@ -42,7 +47,9 @@ namespace Custom.Scripts.ExperimentGeneral
             
             // Retrieve only the clipboard data from the experiment data and build the pages
             var clipboardInput = experimentData.ExperimentClipboardData();
-            clipboardInput.steps = SessionData.checklistSteps;
+            clipboardInput.steps = SessionData.checklistSteps.Count > 0
+                ? SessionData.checklistSteps
+                : clipboardInput.steps;
             clipboardInput.steps.Add("Write down any observations made during the experiment on the whiteboard.");
             BuildPages(clipboardInput);
             
@@ -64,6 +71,8 @@ namespace Custom.Scripts.ExperimentGeneral
             {
                 doorHandler.SetCliboardHandler(this);
             }
+            
+            _startTime = DateTime.Now;
         }
 
         public override void OnNetworkDespawn()
@@ -77,6 +86,13 @@ namespace Custom.Scripts.ExperimentGeneral
                 return;
             }
             WhiteboardColliderEventEmitter.Instance.OnTriggerEnterEvent -= HandleTrigger;
+
+            // Record the amount of time spent in the laboratory room and the number of steps completed for analytics
+            AnalyticsService.Instance.RecordEvent(new LaboratoryRoomExited()
+            {
+                minutesSpent = (int)(DateTime.Now - _startTime).TotalMinutes,
+                stepsCompleted = GetStepsCompleted().Count
+            });
         }
 
         // Method use to get to the next page, unless the current page is the last page
@@ -445,11 +461,21 @@ namespace Custom.Scripts.ExperimentGeneral
     }
 
     // Auxiliary class used to store the clipboard data for each page
-    public class Page
+    internal class Page
     {
         public int fontSize { get; set; }
         public String title { get; set; }
         public String text { get; set; }
         public List<GameObject> images { get; set; } = new();
+    }
+
+    internal class LaboratoryRoomExited : Unity.Services.Analytics.Event
+    {
+        public LaboratoryRoomExited() : base("laboratoryRoomExited")
+        {
+        }
+
+        public int minutesSpent { set => SetParameter("timeSpent", value); }
+        public int stepsCompleted { set => SetParameter("stepsCompleted", value); }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Custom.Scripts
+﻿namespace Custom.Scripts.Data.Dtos
 {
     public class LoginResponseDto
     {

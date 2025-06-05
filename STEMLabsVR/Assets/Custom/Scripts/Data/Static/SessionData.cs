@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Custom.Scripts.Helper
+namespace Custom.Scripts.Data.Static
 {
-    public class SessionData
+    // This class contains static session data for the application.
+    public static class SessionData
     {
-        private static string _inviteCode;
+        private static string _inviteCode = string.Empty;
         public static string inviteCode
         {
             get => _inviteCode;
@@ -18,7 +19,8 @@ namespace Custom.Scripts.Helper
                 }
             }
         }
-        public static List<string> checklistSteps { get; set; }
         public static event Action<string?> OnInviteCodeChanged;
+        public static bool isClientHost { get; set; } = true;
+        public static List<string> checklistSteps { get; set; } = new();
     }
 }

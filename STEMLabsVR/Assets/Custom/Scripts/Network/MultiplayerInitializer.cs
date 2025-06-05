@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Custom.Scripts.Data.Static;
 using Custom.Scripts.Helper;
+using Custom.Scripts.UI;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Services.Authentication;
@@ -29,6 +31,8 @@ namespace Custom.Scripts.Debugging
             {
                 if (SessionData.inviteCode.IsNullOrEmpty())
                 {
+                    SessionData.isClientHost = true;
+                    
                     var inviteCode = await StartHostWithRelay(40, "dtls");
                     if (string.IsNullOrEmpty(inviteCode))
                     {
@@ -43,6 +47,8 @@ namespace Custom.Scripts.Debugging
                 }
                 else
                 {
+                    SessionData.isClientHost = false;
+                    
                     var connectedSuccessfully = await StartClientWithRelay(SessionData.inviteCode, "dtls");
                     if (!connectedSuccessfully)
                     {
@@ -88,7 +94,7 @@ namespace Custom.Scripts.Debugging
 
         private IEnumerator CreateSession()
         {
-            var www = UnityWebRequest.Post("http://localhost:5096/api/laboratory-sessions",
+            var www = UnityWebRequest.Post($"{AppConfig.ServerHostName}/api/laboratory-sessions",
                 $"{{\"creatorId\":{AuthData.id},\"sceneId\":{SceneManager.GetActiveScene().buildIndex},\"inviteCode\":\"{SessionData.inviteCode}\"}}",
                 "application/json");
             www.SetRequestHeader("Authorization", "Bearer " + AuthData.accessToken);

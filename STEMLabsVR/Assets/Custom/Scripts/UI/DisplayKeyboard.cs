@@ -2,8 +2,9 @@
 using TMPro;
 using UnityEngine;
 
-namespace Custom.Scripts.Helper
+namespace Custom.Scripts.UI
 {
+    // This script is used to display a custom keyboard when the TMP_InputField is selected
     [RequireComponent(typeof(TMP_InputField))]
     public class DisplayKeyboard : MonoBehaviour
     {
@@ -16,7 +17,6 @@ namespace Custom.Scripts.Helper
         {
             _inputField = GetComponent<TMP_InputField>();
 
-            // Set the input field to display the keyboard
             _inputField.onSelect.AddListener(ShowKeyboard);
         }
     

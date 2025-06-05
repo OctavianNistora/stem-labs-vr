@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-namespace Custom.Scripts.Helper
+
+namespace Custom.Scripts.Data.Structures
 {
     // Structure for storing spawn point data
     public struct SpawnPointStruct

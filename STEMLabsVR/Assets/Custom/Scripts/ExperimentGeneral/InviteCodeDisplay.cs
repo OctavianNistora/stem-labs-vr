@@ -1,4 +1,5 @@
-﻿using Custom.Scripts.Helper;
+﻿using Custom.Scripts.Data.Static;
+using Custom.Scripts.Helper;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;

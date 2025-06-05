@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Custom.Scripts.Helper;
+using Custom.Scripts.UI;
 using Tymski;
 using UnityEditor;
 using UnityEngine;
@@ -41,14 +43,16 @@ namespace Custom.Scripts.Hallway
         // This method sets the correct doors of the secondary hallway based on the configuration.
         private void SetDoors()
         {
-#if UNITY_EDITOR
+            // Method is empty when not in editor mode, as EditorBuildSettings when building the game.
+            #if UNITY_EDITOR
             var buildScenes = EditorBuildSettings.scenes.Where(scene => scene.enabled)
                 .Select(scene => scene.path).ToList();
             if (isWestSideHallway)
             {
                 secondaryHallwayParts.westSouthDoor.SetActive(true);
-                secondaryHallwayParts.westSouthDoor.GetComponent<DoorHandler>()
-                    .SetScene(sceneList[0], buildScenes.IndexOf(sceneList[0]));
+                var currentDoorHandler = secondaryHallwayParts.westSouthDoor.GetComponent<DoorHandler>();
+                currentDoorHandler.SetScene(sceneList[0], buildScenes.IndexOf(sceneList[0]));
+                currentDoorHandler.SetDoorTitle(Regex.Match(sceneList[0],@"^(.+\/)*(.+)\.(.+)$").Groups[2].Value);
                 secondaryHallwayParts.eastSouthDoor.SetActive(false);
 
                 // Check if the hallway has a north door
@@ -56,8 +60,9 @@ namespace Custom.Scripts.Hallway
                 {
 
                     secondaryHallwayParts.westNorthDoor.SetActive(true);
-                    secondaryHallwayParts.westNorthDoor.GetComponent<DoorHandler>()
-                        .SetScene(sceneList[1], buildScenes.IndexOf(sceneList[1]));
+                    currentDoorHandler = secondaryHallwayParts.westNorthDoor.GetComponent<DoorHandler>();
+                    currentDoorHandler.SetScene(sceneList[1], buildScenes.IndexOf(sceneList[1]));
+                    currentDoorHandler.SetDoorTitle(Regex.Match(sceneList[1],@"^(.+\/)*(.+)\.(.+)$").Groups[2].Value);
                 }
                 else
                 {
@@ -69,22 +74,25 @@ namespace Custom.Scripts.Hallway
             {
                 secondaryHallwayParts.westSouthDoor.SetActive(false);
                 secondaryHallwayParts.eastSouthDoor.SetActive(true);
-                secondaryHallwayParts.eastSouthDoor.GetComponent<DoorHandler>().SetScene(sceneList[0], buildScenes.IndexOf(sceneList[0]));
+                var currentDoorHandler = secondaryHallwayParts.eastSouthDoor.GetComponent<DoorHandler>();
+                currentDoorHandler.SetScene(sceneList[0], buildScenes.IndexOf(sceneList[0]));
+                currentDoorHandler.SetDoorTitle(Regex.Match(sceneList[0],@"^(.+\/)*(.+)\.(.+)$").Groups[2].Value);
 
                 secondaryHallwayParts.westNorthDoor.SetActive(false);
                 // Check if the hallway has a north door
                 if (sceneList.Count > 1)
                 {
                     secondaryHallwayParts.eastNorthDoor.SetActive(true);
-                    secondaryHallwayParts.eastNorthDoor.GetComponent<DoorHandler>()
-                        .SetScene(sceneList[1], buildScenes.IndexOf(sceneList[1]));
+                    currentDoorHandler = secondaryHallwayParts.eastNorthDoor.GetComponent<DoorHandler>();
+                    currentDoorHandler.SetScene(sceneList[1], buildScenes.IndexOf(sceneList[1]));
+                    currentDoorHandler.SetDoorTitle(Regex.Match(sceneList[1],@"^(.+\/)*(.+)\.(.+)$").Groups[2].Value);
                 }
                 else
                 {
                     secondaryHallwayParts.eastNorthDoor.SetActive(false);
                 }
             }
-#endif
+            #endif
         }
 
         private void SetWalls()
