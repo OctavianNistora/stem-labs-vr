@@ -74,11 +74,15 @@ export default function ViewRelatedLaboratoriesPage() {
       <Typography variant="h4" marginY={2}>
         Select a laboratory
       </Typography>
-      <List sx={{ width: "100%" }}>
+      <List id={"laboratories-list"} sx={{ width: "100%" }}>
         {laboratories.map((laboratory) => (
           <>
             <Divider />
-            <ListItem key={laboratory.id} disablePadding>
+            <ListItem
+              key={laboratory.id}
+              id={laboratory.id.toString()}
+              disablePadding
+            >
               <ListItemButton component={Link} to={laboratory.id.toString()}>
                 <ListItemText primary={laboratory.name} />
               </ListItemButton>

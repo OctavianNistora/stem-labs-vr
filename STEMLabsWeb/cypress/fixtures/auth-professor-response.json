@@ -1,0 +1,6 @@
+{
+    "uid": 123,
+    "accessToken": "123abc456def789ghi",
+    "refreshToken": "xyz9876543210",
+    "role": "professor"
+}

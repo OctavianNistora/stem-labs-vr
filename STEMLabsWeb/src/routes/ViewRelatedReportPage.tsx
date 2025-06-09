@@ -155,9 +155,20 @@ export default function ViewRelatedReportPage() {
           </Typography>
           <Divider sx={{ width: "100%" }} />
           <Box width="100%" height="100%">
-            <Stack width="100%" height="100%" direction="row" overflow="auto">
+            <Stack
+              id={"reports-list"}
+              width="100%"
+              height="100%"
+              direction="row"
+              overflow="auto"
+            >
               {reportTabList.map((report, index) => (
-                <Box display="flex" key={report.id} whiteSpace="nowrap">
+                <Box
+                  display="flex"
+                  key={report.id}
+                  id={report.id.toString()}
+                  whiteSpace="nowrap"
+                >
                   <Button
                     component={Link}
                     to={
@@ -197,6 +208,7 @@ export default function ViewRelatedReportPage() {
           overflow="hidden"
         >
           <TextField
+            id={"submitter-full-name"}
             variant="standard"
             label="Submitter"
             value={currentReportDetails.submitter}
@@ -214,6 +226,8 @@ export default function ViewRelatedReportPage() {
             <Stack direction="column" overflow="auto">
               {currentReportDetails.steps.map((step, index) => (
                 <TextField
+                  key={currentReportDetails.id + "-" + index}
+                  id={`step-${index + 1}`}
                   variant="standard"
                   label={`Step ${index + 1}`}
                   value={step.statement}
@@ -245,6 +259,7 @@ export default function ViewRelatedReportPage() {
                 <Box height="100%" marginRight="auto" boxShadow={2}>
                   <Link to={currentReportDetails.link} target="_blank">
                     <img
+                      id={`observations-image`}
                       src={currentReportDetails.link}
                       alt="Observations"
                       style={{

@@ -27,20 +27,20 @@ export type DrawerListElement = {
 };
 
 const beforeDrawerList: DrawerListElement[] = [
-  { icon: <LocationCityIcon />, text: "Home page", link: "/" },
+  { icon: <LocationCityIcon />, text: "Home Page", link: "/" },
 ];
 
 const studentDrawerList: DrawerListElement[] = [
   {
     icon: <AssignmentTurnedInIcon />,
-    text: "View reports",
+    text: "View Reports",
     link: "reports",
   },
 ];
 const professorDrawerList: DrawerListElement[] = studentDrawerList.concat([]);
 const adminDrawerList: DrawerListElement[] = professorDrawerList.concat([
   { icon: <BiotechIcon />, text: "Manage Laboratories", link: "laboratories" },
-  { icon: <PeopleIcon />, text: "Manage users", link: "manage-users" },
+  { icon: <PeopleIcon />, text: "Manage Users", link: "manage-users" },
 ]);
 
 const afterDrawerList: DrawerListElement[] = [
@@ -96,10 +96,14 @@ export default function DrawerLayout() {
           sx={{ fontSize: 96, color: "primary.contrastText" }}
           viewBox="0 0 1024 1024"
         />
-        <List sx={{ fontSize: 12 }}>
+        <List id={"drawer-list"} sx={{ fontSize: 12 }}>
           {getDrawerList(user?.role).map((item) => (
             <ListItem key={item.text} disablePadding>
-              <ListItemButton component={Link} to={item.link}>
+              <ListItemButton
+                id={`${item.text.toLowerCase().replace(" ", "-")}-drawer-button`}
+                component={Link}
+                to={item.link}
+              >
                 <StyledListItemIcon>{item.icon}</StyledListItemIcon>
                 <StyledListItemText
                   primary={<Box fontWeight="normal">{item.text}</Box>}
@@ -108,7 +112,7 @@ export default function DrawerLayout() {
             </ListItem>
           ))}
           <ListItem key="Logout" disablePadding>
-            <ListItemButton onClick={handleLogout}>
+            <ListItemButton id={"logout-drawer-button"} onClick={handleLogout}>
               <StyledListItemIcon sx={{ marginLeft: "2px" }}>
                 <LogoutIcon />
               </StyledListItemIcon>

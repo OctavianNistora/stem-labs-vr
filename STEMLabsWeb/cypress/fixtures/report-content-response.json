@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "submitterFullName": "John Doe",
+  "checklistSteps": [
+	{
+	  "statement": "Verify the system is operational",
+	  "isCompleted": true
+	},
+	{
+	  "statement": "Ensure all components are functioning correctly",
+	  "isCompleted": false
+	},
+	{
+	  "statement": "Confirm the system meets all operational standards",
+	  "isCompleted": true
+	}
+  ],
+  "observationsImageLink": "https://placehold.co/600x400.png"
+}

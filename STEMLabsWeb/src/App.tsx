@@ -19,7 +19,7 @@ import ViewLaboratoriesPage from "./routes/ViewLaboratoriesPage.tsx";
 import ManageLaboratoryPage from "./routes/ManageLaboratoryPage.tsx";
 import ViewRelatedLaboratoriesPage from "./routes/ViewRelatedLaboratoriesPage.tsx";
 import ViewRelatedSessionsPage from "./routes/ViewRelatedSessionsPage.tsx";
-import ViewRelatedReportsListPage from "./routes/ViewRelatedReportsListPage.tsx";
+import ViewRelatedParticipantsPage from "./routes/ViewRelatedParticipantsPage.tsx";
 import ViewRelatedReportPage from "./routes/ViewRelatedReportPage.tsx";
 
 function App() {
@@ -57,7 +57,7 @@ function App() {
                         <Route path=":sessionId">
                           <Route
                             index
-                            element={<ViewRelatedReportsListPage />}
+                            element={<ViewRelatedParticipantsPage />}
                           />
                           <Route path=":userId/:reportId?">
                             <Route index element={<ViewRelatedReportPage />} />

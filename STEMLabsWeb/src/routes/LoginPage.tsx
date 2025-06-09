@@ -57,6 +57,7 @@ export default function LoginPage() {
       </Box>
       <Box display="flex" width="80%" flexDirection="column" gap={2}>
         <TextField
+          id="username-field"
           fullWidth
           type="text"
           autoComplete="username"
@@ -65,6 +66,7 @@ export default function LoginPage() {
           onChange={(e) => setUsername(e.currentTarget.value)}
         />
         <TextField
+          id="password-field"
           fullWidth
           type="password"
           autoComplete="current-password"
@@ -73,6 +75,7 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.currentTarget.value)}
         />
         <Button
+          id="login-button"
           disabled={isAuthenticating}
           fullWidth
           size="large"
@@ -82,6 +85,7 @@ export default function LoginPage() {
           {isAuthenticating ? <CircularProgress /> : "Log in"}
         </Button>
         <Button
+          id="recovery-button"
           disabled={isAuthenticating}
           fullWidth
           size="small"

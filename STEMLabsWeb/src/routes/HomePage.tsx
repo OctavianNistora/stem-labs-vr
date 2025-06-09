@@ -33,7 +33,11 @@ export default function HomePage() {
       <List component={Stack} direction="row">
         {getDrawerList(user?.role).map((item) => (
           <ListItem alignItems="flex-start" key={item.text}>
-            <ListItemButton component={Link} to={item.link}>
+            <ListItemButton
+              id={`${item.text.toLowerCase().replace(" ", "-")}-homepage-button`}
+              component={Link}
+              to={item.link}
+            >
               <Stack alignItems="center" alignContent="center">
                 <ListItemIcon
                   sx={{

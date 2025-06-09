@@ -16,7 +16,7 @@ import Divider from "@mui/material/Divider";
 import type { IdNameDate } from "../types/IdNameDate.tsx";
 import { axiosRequestWithAutoReauth } from "../helpers/axiosRequestWithAutoReauth.tsx";
 
-export default function ViewRelatedReportsListPage() {
+export default function ViewRelatedParticipantsPage() {
   const { sessionId } = useParams();
   const [participants, setParticipants] = useState<IdNameDate[]>([]);
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ export default function ViewRelatedReportsListPage() {
     >
       <TitleWithBackButton to=".." title="Select a participant" />
       <Box width="100%" overflow="auto">
-        <List sx={{ width: "100%" }}>
+        <List id={"participants-list"} sx={{ width: "100%" }}>
           {participants.map((session) => {
             const sessionDate = session.date;
             const date =
@@ -97,7 +97,11 @@ export default function ViewRelatedReportsListPage() {
             return (
               <>
                 <Divider />
-                <ListItem key={session.id} disablePadding>
+                <ListItem
+                  key={session.id}
+                  id={session.id.toString()}
+                  disablePadding
+                >
                   <ListItemButton
                     component={Link}
                     to={

@@ -87,12 +87,16 @@ export default function ViewRelatedSessionsPage() {
     >
       <TitleWithBackButton to=".." title="Select a session's date and time" />
       <Box width="100%" overflow="auto">
-        <List sx={{ width: "100%" }}>
+        <List id="sessions-list" sx={{ width: "100%" }}>
           {sessions.map((session) => {
             return (
               <>
                 <Divider />
-                <ListItem key={session.id} disablePadding>
+                <ListItem
+                  key={session.id}
+                  id={session.id.toString()}
+                  disablePadding
+                >
                   <ListItemButton
                     component={Link}
                     to={

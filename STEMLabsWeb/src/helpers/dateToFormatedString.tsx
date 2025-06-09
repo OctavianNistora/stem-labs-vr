@@ -1,4 +1,5 @@
 ﻿export default function dateToFormattedString(date: Date): string {
+  console.log(date);
   const dateString =
     date.getDate().toString().padStart(2, "0") +
     "/" +
