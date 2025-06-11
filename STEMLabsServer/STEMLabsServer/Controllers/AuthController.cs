@@ -43,12 +43,5 @@ namespace STEMLabsServer.Controllers
             
             return Ok(token);
         }
-
-        [HttpGet]
-        [Authorize]
-        public Task<ActionResult<AuthResponseDto>> Test(CancellationToken cancellationToken)
-        {
-            return Task.FromResult<ActionResult<AuthResponseDto>>(Ok());
-        }
     }
 }

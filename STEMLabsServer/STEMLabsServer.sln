@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36109.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STEMLabsServer", "STEMLabsServer.csproj", "{007AE02B-E326-4E61-9717-B217CDF8B527}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STEMLabsServer", "STEMLabsServer\STEMLabsServer.csproj", "{9AFECEC3-C2B4-4BC5-BA3E-75FE9CC0F134}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STEMLabsServerTests", "STEMLabsServerTests\STEMLabsServerTests.csproj", "{21B9252E-08B3-4CAF-9BD8-5B99A1A9BAC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{007AE02B-E326-4E61-9717-B217CDF8B527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{007AE02B-E326-4E61-9717-B217CDF8B527}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{007AE02B-E326-4E61-9717-B217CDF8B527}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{007AE02B-E326-4E61-9717-B217CDF8B527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AFECEC3-C2B4-4BC5-BA3E-75FE9CC0F134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AFECEC3-C2B4-4BC5-BA3E-75FE9CC0F134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AFECEC3-C2B4-4BC5-BA3E-75FE9CC0F134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AFECEC3-C2B4-4BC5-BA3E-75FE9CC0F134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B9252E-08B3-4CAF-9BD8-5B99A1A9BAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B9252E-08B3-4CAF-9BD8-5B99A1A9BAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B9252E-08B3-4CAF-9BD8-5B99A1A9BAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B9252E-08B3-4CAF-9BD8-5B99A1A9BAC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
