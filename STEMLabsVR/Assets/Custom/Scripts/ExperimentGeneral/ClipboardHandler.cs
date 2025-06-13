@@ -91,7 +91,7 @@ namespace Custom.Scripts.ExperimentGeneral
             AnalyticsService.Instance.RecordEvent(new LaboratoryRoomExited()
             {
                 minutesSpent = (int)(DateTime.Now - _startTime).TotalMinutes,
-                stepsCompleted = GetStepsCompleted().Count
+                stepsCompleted = GetStepsCompleted().Count + (AreObservationsMade() ? 1 : 0)
             });
         }
 
@@ -395,14 +395,15 @@ namespace Custom.Scripts.ExperimentGeneral
         public void CompleteExperimentStep(int stepSelected)
         {
             var stepIndex = stepSelected - 1;
-            if (_stepsCompletedArray[stepIndex])
-            {
-                return;
-            }
             
             if (stepIndex < 0 || stepIndex >= _stepsCompletedArray.Length)
             {
                 Debug.LogError($"Invalid step index {stepIndex}");
+                return;
+            }
+            
+            if (_stepsCompletedArray[stepIndex])
+            {
                 return;
             }
 

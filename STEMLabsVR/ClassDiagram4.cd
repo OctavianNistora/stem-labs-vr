@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Custom.Scripts.UI.NamePlateHandler" Collapsed="true">
+    <Position X="6.25" Y="8.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAIAARAAAAAAAACgAAAAIAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\UI\NamePlateHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.UI.DisplayKeyboard" Collapsed="true">
+    <Position X="2.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAACAAAAAAAAAAAgAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\UI\DisplayKeyboard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.UI.DoorHandler" Collapsed="true">
+    <Position X="1" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>WAQJAAAYA6hAgAEGAAACEZAxKCAAAAAADIKSgAEACAo=</HashCode>
+      <FileName>Assets\Custom\Scripts\UI\DoorHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Data.Dtos.LoginResponseDto" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAEAAAAACAABAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\Dtos\LoginResponseDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Data.ScriptableObjects.ExperimentData" Collapsed="true">
+    <Position X="16.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAJASAAAAAAEAAAABECgAAgAAAAAQ=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\ScriptableObjects\ExperimentData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Data.Static.AppConfig" Collapsed="true">
+    <Position X="1" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\Static\AppConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Data.Static.AuthData" Collapsed="true">
+    <Position X="1" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAADAABAAAAAAAAAAAAAAAAAQEgA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\Static\AuthData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Data.Static.SessionData" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAIAAAAAAAEAAAAAAAAAACAACAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\Static\SessionData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Data.Wrappers.JsonListWrapper&lt;T&gt;" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\Wrappers\JsonListWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.ExperimentClipboardData" Collapsed="true">
+    <Position X="17.25" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AEBAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ClipboardExperimentDescriptionContent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.ClipboardExperimentDescriptionContent" Collapsed="true">
+    <Position X="14.5" Y="7.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQYAAAAAAAAAAAAAAAAABAgAIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ClipboardExperimentDescriptionContent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.ClipboardHandler" Collapsed="true">
+    <Position X="18" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAoAKAAAwAhJBDMCAggQIAACIAAACABgwAASAAI=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ClipboardHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.Page" Collapsed="true">
+    <Position X="18" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAACAAAAAAAAEAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ClipboardHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.LaboratoryRoomExited" Collapsed="true">
+    <Position X="15.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ClipboardHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.ClockLocalTimeHandler" Collapsed="true">
+    <Position X="15" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQQEAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ClockLocalTimeHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.ExperimentRoomDoorSelector" Collapsed="true">
+    <Position X="17.25" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAICAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ExperimentRoomDoorSelector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.ExperimentRoomTableReferences" Collapsed="true">
+    <Position X="17" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAACAAAEA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\ExperimentRoomTableReferences.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.InviteCodeDisplay" Collapsed="true">
+    <Position X="8.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\InviteCodeDisplay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.MarkerGrabHandler" Collapsed="true">
+    <Position X="15.25" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAgAAAAAAAAABAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\MarkerGrabHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.NetworkOutOfBoundsHandler" Collapsed="true">
+    <Position X="3.5" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABCAAAGCAAAAAAAAAAAAAAAACAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\NetworkOutOfBoundsHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.NetworkSetupSpawnLocationHandler" Collapsed="true">
+    <Position X="10.25" Y="7.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAACAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\NetworkSetupSpawnLocationHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.AvailableSpawnPointsSingleton" Collapsed="true">
+    <Position X="17" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAABAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\NetworkSetupSpawnLocationHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.SetupBoundingBox" Collapsed="true">
+    <Position X="15.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\SetupBoundingBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.UiButtonHandler" Collapsed="true">
+    <Position X="14.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAECAAAAAAAAAIAAAACAQAAAAAEAAgAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\UiButtonHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.WhiteboardColliderEventEmitter" Collapsed="true">
+    <Position X="17" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAQAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\WhiteboardColliderEventEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentGeneral.WhiteboardInitializer" Collapsed="true">
+    <Position X="15.5" Y="5.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentGeneral\WhiteboardInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentSpecific.ThermalExpansion.NetworkFlameToggleScript" Collapsed="true">
+    <Position X="8.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAACAEAAAAACgEAAAAAAAE=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentSpecific\ThermalExpansion\NetworkFlameToggleScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentSpecific.ThermalExpansion.ThermalExpansionHandler" Collapsed="true">
+    <Position X="8.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQgEAAQASAAAAAAAMsAFIAACAAAAACAAAAAAAAABAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentSpecific\ThermalExpansion\ThermalExpansionHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.ExperimentSpecific.ThermalExpansion.ThermalExperimentBallCollisionScript" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACAAAgAAAwAABAAACAAAAIAIAAEIAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\ExperimentSpecific\ThermalExpansion\ThermalExperimentBallCollisionScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.BuildingHallwayGenerator" Collapsed="true">
+    <Position X="0.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAAAAEAAAAAgAAAAAgAAAAAAAAACAAACAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Hallway\BuildingHallwayGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Hallway.CloseGameHandler" Collapsed="true">
+    <Position X="9.25" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Hallway\CloseGameHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Hallway.PrimaryHallwayGenerator" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AEBAAIBAQJAAACAAgAAAACCAAAAABCAAEAAABJAQAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Hallway\PrimaryHallwayGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Hallway.SecondaryHallwayGenerator" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABBAgAAAIMKAAACAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Hallway\SecondaryHallwayGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.HandAnimationManager" Collapsed="true">
+    <Position X="11" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACBACAAECAgABAAAAAAAAAAAAgBAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\HandAnimationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.LabelOverrideAttribute" Collapsed="true">
+    <Position X="7.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\LabelOverrideAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.LabelOverrideDrawer" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\LabelOverrideDrawer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.SceneLoadEventHandler" Collapsed="true">
+    <Position X="17.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\SceneLoadEventHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.LaboratoryRoomEntered" Collapsed="true">
+    <Position X="17.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\SceneLoadEventHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.SceneSpawnManager" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAACAAAAAAAAAAAAAAQAAAAQAAAEA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\SceneSpawnManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.XROriginReferences" Collapsed="true">
+    <Position X="4.25" Y="8.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAEEAAAAAAAAAAABAQAAAAAAAQQBAAAAAAAUA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\XROriginReferences.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.XROriginSpawnHandler" Collapsed="true">
+    <Position X="4" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Helper\XROriginSpawnHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.NetworkClientAnimator" Collapsed="true">
+    <Position X="11" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Network\NetworkClientAnimator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.NetworkClientTransform" Collapsed="true">
+    <Position X="8.75" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Network\NetworkClientTransform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.NetworkHandAnimationManager" Collapsed="true">
+    <Position X="6" Y="9" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AACAACAAEAAgABAAAAAAAAAAAAgBAAAACAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Custom\Scripts\Network\NetworkHandAnimationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.NetworkPlayerSync" Collapsed="true">
+    <Position X="8.25" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AFQACAAAACAAAAAAAAAAAAAAAABAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Network\NetworkPlayerSync.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Custom.Scripts.Helper.NetworkXRInteractableConstraint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="8.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAgAAAAAAAAAAAAAACAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Custom\Scripts\Network\NetworkXRInteractableConstraint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Custom.Scripts.Debugging.MultiplayerInitializer" Collapsed="true">
+    <Position X="6.25" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAABAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Network\MultiplayerInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Custom.Scripts.Data.Structures.SpawnPointStruct" Collapsed="true">
+    <Position X="4.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\Structures\SpawnPointStruct.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Custom.Scripts.Data.ScriptableObjects.ExperimentDescriptionType" Collapsed="true">
+    <Position X="14.5" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAACAAAAAA=</HashCode>
+      <FileName>Assets\Custom\Scripts\Data\ScriptableObjects\ExperimentData.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

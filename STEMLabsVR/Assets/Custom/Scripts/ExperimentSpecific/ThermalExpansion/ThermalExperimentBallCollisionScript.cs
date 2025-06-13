@@ -47,7 +47,7 @@ namespace Custom.Scripts.ExperimentSpecific.ThermalExpansion
             // The distance from the center of the ball to the surface of the ring is computed using the Pythagorean
             // theorem.
             var distanceCentersBallCircle = Mathf.Sqrt(ballActualRadius*ballActualRadius - ringRadius*ringRadius);
-            var distanceDifference = ringRadius - distanceCentersBallCircle;
+            var distanceDifference = ballActualRadius - distanceCentersBallCircle;
 
             // In order to accurately place the ringFixCollider, we need to first add half of the ring width in the
             // direction of the ball collider, and then subtract in the opposite direction the difference between the

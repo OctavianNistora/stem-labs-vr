@@ -21,8 +21,8 @@ namespace Custom.Scripts.ExperimentGeneral
             {
                 // Check if the door leads to the previous scene and is in the correct orientation since there could be
                 // multiple doors leading to the same scene
-                if (doorScript.GetScene().ScenePath != SceneSpawnManager.Instance.previousScenePathName &&
-                    Mathf.Abs(doorScript.transform.rotation.y - SceneSpawnManager.Instance.doorOrientation) < 0.1f)
+                if (doorScript.GetScene().ScenePath != SceneSpawnManager.Instance.previousScenePathName ||
+                    Mathf.Abs(doorScript.transform.rotation.eulerAngles.y - SceneSpawnManager.Instance.doorOrientation) > 0.1f)
                 {
                     continue;
                 }

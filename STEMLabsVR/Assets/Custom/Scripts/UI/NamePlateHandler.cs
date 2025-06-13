@@ -14,7 +14,7 @@ namespace Custom.Scripts.UI
         [SerializeField] private Transform headTransform;
         [SerializeField] private int namePlateHeight;
     
-        private readonly NetworkVariable<FixedString128Bytes> _networkName = new NetworkVariable<FixedString128Bytes>("", NetworkVariableReadPermission.Everyone,
+        private readonly NetworkVariable<FixedString128Bytes> _networkName = new("", NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Owner);
 
         // This method is called when the network object is spawned, and it initializes the name plate text and sets up the name change listener.

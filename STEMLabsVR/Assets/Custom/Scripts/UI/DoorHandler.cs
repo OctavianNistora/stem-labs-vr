@@ -44,9 +44,9 @@ namespace Custom.Scripts.UI
         private string _inviteCode;
         private List<IMultipartFormSection> _savedMultipartForm;
 
-        // This property is used to check disable the interactable UI when the door is instantiated, change it's initial
-        // panel based on the user's login state, and subscribe to the OnIdChanged event to change the panel when the
-        // user's ID changes.
+        // This method is used to initially disable the interactable UI when the door is instantiated, change the initial
+        // panel to be displayed based on the user's login state, and subscribe to the OnIdChanged event to change the
+        // panel when the user's ID changes.
         private void Start()
         {
             SceneSpawnManager.Instance.isTransitioning = false;
@@ -77,7 +77,8 @@ namespace Custom.Scripts.UI
         // Method called when the player interacts with the door
         public void DoorInteracted()
         {
-            // If the scene transition is in progress, it returns early to avoid any conflicts.
+            // If the scene transition is in progress or the user is waiting for a response from the server to avoid
+            // multiple requests, it returns early to avoid any conflicts.
             if (SceneSpawnManager.Instance.isTransitioning)
             {
                 return;
@@ -97,7 +98,7 @@ namespace Custom.Scripts.UI
                 return;
             }
         
-            // Returns early if the user is waiting for a response from the server to avoid multiple requests.
+            // Returns early if the user is .
             if (_isWaitingResponse)
             {
                 return;
@@ -131,7 +132,8 @@ namespace Custom.Scripts.UI
                 RenderTexture.active = oldRT;
             
                 var bytes = whiteboardTexture.EncodeToJPG();
-                form.Add(new MultipartFormFileSection("ObservationsImage", bytes, "whiteboard.jpg", "image/jpeg"));
+                form.Add(new MultipartFormFileSection("ObservationsImage", bytes, "whiteboard.jpg",
+                    "image/jpeg"));
             }
             
             StartCoroutine(UploadReport(form));
@@ -167,6 +169,22 @@ namespace Custom.Scripts.UI
                 loginButton.interactable = true;
             }
         }
+        
+        // This method is called when the user clicks the guest login button. It sets the AuthData properties to indicate
+        // that the user is a guest.
+        public void GuestLoginClicked()
+        {
+            if (_isWaitingResponse)
+            {
+                return;
+            }
+        
+            AuthData.isGuest = true;
+            AuthData.id = 0;
+            AuthData.accessToken = "";
+            AuthData.fullName = "Guest";
+            AuthData.role = "Guest";
+        }
     
         // This method is called when the user clicks the login button. It checks if the user is already waiting for a 
         // response from the server, and if not, it starts the login coroutine. If the user has a saved multipart form,
@@ -187,29 +205,15 @@ namespace Custom.Scripts.UI
                 StartCoroutine(AttemptReloginAndReupload());
             }
         }
-        
-        // This method is called when the user clicks the guest login button. It sets the AuthData properties to indicate
-        // that the user is a guest.
-        public void GuestLoginClicked()
-        {
-            if (_isWaitingResponse)
-            {
-                return;
-            }
-        
-            AuthData.isGuest = true;
-            AuthData.id = 0;
-            AuthData.accessToken = "";
-            AuthData.fullName = "Guest";
-            AuthData.role = "Guest";
-        }
     
         // This coroutine handles the login process by sending a POST request to the server with the user's credentials.
         private IEnumerator Login()
         {
             _isWaitingResponse = true;
-        
-            using (UnityWebRequest www = UnityWebRequest.Post($"{AppConfig.ServerHostName}/api/auth/session", $"{{\n  \"username\": \"{_username}\",\n  \"password\": \"{_password}\",\n  \"respondWithRefreshToken\": false\n}}", "application/json"))
+
+            using (UnityWebRequest www = UnityWebRequest.Post($"{AppConfig.ServerHostName}/api/auth/session",
+                       $"{{\n  \"username\": \"{_username}\",\n  \"password\": \"{_password}\",\n  \"respondWithRefreshToken\": false\n}}",
+                       "application/json"))
             {
                 yield return www.SendWebRequest();
 
@@ -375,7 +379,8 @@ namespace Custom.Scripts.UI
         // This method saves the multipart form data as a JSON file in the persistent data path.
         private void SaveFormAsFile(List<IMultipartFormSection> form)
         {
-            var filePath = System.IO.Path.Combine(Application.persistentDataPath, $"formdata_{System.DateTime.Now:yyyy_MM_dd_HH_mm_ss}.json");
+            var filePath = System.IO.Path.Combine(Application.persistentDataPath,
+                $"formdata_{AuthData.id}_{SceneManager.GetActiveScene().buildIndex}_{DateTime.Now:yyyy_MM_dd_HH_mm_ss}.json");
             using (var file = System.IO.File.CreateText(filePath))
             {
                 file.WriteLine("[");

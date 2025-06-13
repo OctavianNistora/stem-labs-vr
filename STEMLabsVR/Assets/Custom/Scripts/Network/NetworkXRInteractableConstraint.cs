@@ -34,10 +34,13 @@ namespace Custom.Scripts.Helper
             }
         }
 
+        // Check if the select interaction should be processed depending on the ownership of the object
         public bool Process(IXRSelectInteractor interactor, IXRSelectInteractable interactable)
         {
             return IsOwner;
         }
+        
+        // Check if the hover interaction should be processed depending on the ownership of the object
         public bool Process(IXRHoverInteractor interactor, IXRHoverInteractable interactable)
         {
             return IsOwner;

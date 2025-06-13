@@ -28,7 +28,9 @@ namespace Custom.Scripts.Helper
             // Iterate through each door script to find the matching scene path and if found, set the spawn point
             foreach (var doorScript in doorScriptList)
             {
-                if (doorScript.GetScene().ScenePath == SceneSpawnManager.Instance.previousScenePathName)
+                if (doorScript.GetScene().ScenePath == SceneSpawnManager.Instance.previousScenePathName &&
+                    Mathf.Abs(doorScript.transform.rotation.eulerAngles.y -
+                              SceneSpawnManager.Instance.doorOrientation) < 0.1f)
                 {
                     var spawnPoint = doorScript.GetSpawnPoint();
                     transform.position = spawnPoint.position;
