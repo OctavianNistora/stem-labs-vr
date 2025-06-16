@@ -3,6 +3,7 @@
     // This class contains static configuration read-only data for the application.
     public static class AppConfig
     {
-        public const string ServerHostName = "http://localhost:5096";
+        // Hostname for the server of the STEM Labs VR system, used for API requests
+        public const string ServerHostName = "http://localhost:2077";
     }
 }

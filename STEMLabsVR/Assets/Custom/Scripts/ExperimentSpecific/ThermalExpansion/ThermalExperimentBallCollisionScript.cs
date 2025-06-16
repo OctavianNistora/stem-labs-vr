@@ -32,7 +32,7 @@ namespace Custom.Scripts.ExperimentSpecific.ThermalExpansion
 
         private void DetermineCollisionOutcome(Collision collision)
         {
-            if (!IsServer || !collision.gameObject.CompareTag("Ring"))
+            if (!IsOwner || !collision.gameObject.CompareTag("Ring"))
             {
                 return;
             }
@@ -54,11 +54,11 @@ namespace Custom.Scripts.ExperimentSpecific.ThermalExpansion
             // radius of the ball and distance between the centers of the ball and ring surface.
             if (ballCollider.gameObject.transform.position.y > ringFixCollider.transform.position.y)
             {
-                ringFixCollider.center = new Vector3(0, 0, ringWidth/2-distanceDifference);
+                ringFixCollider.center = new Vector3(0, 0, ringWidth/2 - distanceDifference);
             }
             else
             {
-                ringFixCollider.center = new Vector3(0, 0, -ringWidth/2 +distanceDifference);
+                ringFixCollider.center = new Vector3(0, 0, -ringWidth/2 + distanceDifference);
             }
             ringFixCollider.enabled = true;
 
@@ -68,10 +68,7 @@ namespace Custom.Scripts.ExperimentSpecific.ThermalExpansion
                 RingCollisionRpc();
             }
         }
-
-        // The RPC is called once, when the ball touches the ring for the first time while being bigger than the ring,
-        // and is responsible for completing the experiment step.
-        [Rpc(SendTo.Owner)]
+        
         private void RingCollisionRpc()
         {
             clipboardHandler.CompleteExperimentStep(stepCompleted);

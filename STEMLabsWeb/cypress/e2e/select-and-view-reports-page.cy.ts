@@ -1,7 +1,7 @@
 describe("select-and-view-reports-page", () => {
   beforeEach(() => {
     localStorage.setItem("refreshToken", "refreshToken123");
-    cy.visit("http://localhost:2077/reports/1/2/3");
+    cy.visit("http://localhost:8080/reports/1/2/3");
 
     cy.intercept(
       "POST",

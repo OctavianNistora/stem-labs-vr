@@ -74,7 +74,8 @@ namespace Custom.Scripts.Debugging
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
             }
             var allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+            NetworkManager.Singleton.GetComponent<UnityTransport>()
+                .SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             return NetworkManager.Singleton.StartHost() ? joinCode : null;
         }
@@ -88,7 +89,8 @@ namespace Custom.Scripts.Debugging
             }
 
             var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
+            NetworkManager.Singleton.GetComponent<UnityTransport>()
+                .SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
             return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
         }
 

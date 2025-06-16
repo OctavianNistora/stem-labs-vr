@@ -1,7 +1,7 @@
 describe("select-participant-page", () => {
   beforeEach(() => {
     localStorage.setItem("refreshToken", "refreshToken123");
-    cy.visit("http://localhost:2077/reports/1/2");
+    cy.visit("http://localhost:8080/reports/1/2");
   });
 
   it("check visit by student", () => {
@@ -11,7 +11,7 @@ describe("select-participant-page", () => {
       { fixture: "auth-student-response.json" },
     );
 
-    cy.url().should("equal", "http://localhost:2077/reports/1");
+    cy.url().should("equal", "http://localhost:8080/reports/1");
   });
 
   it("check visit by non-student", () => {

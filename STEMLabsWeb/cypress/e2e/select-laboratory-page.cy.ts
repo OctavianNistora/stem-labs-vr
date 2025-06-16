@@ -1,7 +1,7 @@
 ﻿describe("select-laboratory-page", () => {
   beforeEach(() => {
     localStorage.setItem("refreshToken", "refreshToken123");
-    cy.visit("http://localhost:2077/reports");
+    cy.visit("http://localhost:8080/reports");
   });
 
   it("check visit by admin", () => {

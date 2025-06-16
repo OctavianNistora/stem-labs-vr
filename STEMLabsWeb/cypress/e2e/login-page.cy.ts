@@ -1,6 +1,6 @@
 ﻿describe("login", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:2077/login");
+    cy.visit("http://localhost:8080/login");
   });
 
   it("type into username field", () => {
@@ -32,6 +32,6 @@
       },
     );
 
-    cy.url().should("equal", "http://localhost:2077/");
+    cy.url().should("equal", "http://localhost:8080/");
   });
 });

@@ -1,7 +1,7 @@
 ﻿describe("home-page", () => {
   beforeEach(() => {
     localStorage.setItem("refreshToken", "refreshToken123");
-    cy.visit("http://localhost:2077");
+    cy.visit("http://localhost:8080");
     cy.intercept(
       "POST",
       `${Cypress.env("VITE_API_URL")}/api/auth/refresh-token`,

@@ -12,14 +12,14 @@ using STEMLabsServer.Services;
 using STEMLabsServer.Services.Interfaces;
 using STEMLabsServer.Shared;
 
-Env.Load();
+Env.Load(".env.local");
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MainDbContext>(options =>
 {
-    options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_STRING") ?? 
-                      throw new InvalidOperationException("DATABASE_STRING is not set."));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? 
+                      throw new InvalidOperationException("DATABASE_CONNECTION_STRING is not set."));
     options.UseSeeding((context, _) =>
     {
         var adminsExists = context.Set<User>().Any(user => user.UserRole == UserRole.Admin);
@@ -53,8 +53,8 @@ builder.Services.AddDbContext<MainDbContext>(options =>
                     Username = "studentUsername1",
                     PasswordHashed = new PasswordHasher<User>().HashPassword(null!, "studentPassword1"),
                     Email = "student1.email@email-address.com",
-                    FirstName = "Preset1",
-                    LastName = "Student",
+                    FirstName = "Octavian",
+                    LastName = "NISTORA",
                     PhoneNumber = "1234567890",
                     UserRole = UserRole.Student,
                     IsVerified = true,
@@ -107,8 +107,8 @@ builder.Services.AddDbContext<MainDbContext>(options =>
                     Username = "professorUsername1",
                     PasswordHashed = new PasswordHasher<User>().HashPassword(null!, "professorPassword1"),
                     Email = "professor1.email@email-address.com",
-                    FirstName = "Preset1",
-                    LastName = "Professor",
+                    FirstName = "John",
+                    LastName = "Smith",
                     PhoneNumber = "1234567890",
                     UserRole = UserRole.Professor,
                     IsVerified = true,

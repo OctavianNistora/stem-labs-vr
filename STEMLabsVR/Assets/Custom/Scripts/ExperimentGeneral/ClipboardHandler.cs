@@ -47,9 +47,9 @@ namespace Custom.Scripts.ExperimentGeneral
             
             // Retrieve only the clipboard data from the experiment data and build the pages
             var clipboardInput = experimentData.ExperimentClipboardData();
-            clipboardInput.steps = SessionData.checklistSteps.Count > 0
+            clipboardInput.steps = new List<string>(SessionData.checklistSteps.Count > 0
                 ? SessionData.checklistSteps
-                : clipboardInput.steps;
+                : clipboardInput.steps);
             clipboardInput.steps.Add("Write down any observations made during the experiment on the whiteboard.");
             BuildPages(clipboardInput);
             
@@ -192,6 +192,7 @@ namespace Custom.Scripts.ExperimentGeneral
         }
 
         // Method used to build the pages of the clipboard using the experiment clipboard data
+        // ReSharper disable Unity.PerformanceAnalysis
         private void BuildPages(ExperimentClipboardData experimentClipboardData)
         {
             // Compute the aspect ratio of the page, maximum allowed image height and height of each line of text for

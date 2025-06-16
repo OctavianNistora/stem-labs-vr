@@ -51,6 +51,7 @@ public class RecoveryService(MainDbContext context) : IRecoveryService
         var body = $"Your password reset token is: {token}\n" +
                    "Please use this token to reset your password within the next 15 minutes.";
         await MailProvider.SendEmailAsync(user.Email, subject, body, cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
         return true;
     }
     
