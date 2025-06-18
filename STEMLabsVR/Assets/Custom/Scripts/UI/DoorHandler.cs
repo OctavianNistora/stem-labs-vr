@@ -36,6 +36,7 @@ namespace Custom.Scripts.UI
         [SerializeField] private Button joinButton;
         [SerializeField] private ClipboardHandler clipboardHandler;
         [SerializeField] private RenderTexture whiteboardRenderTexture;
+        [SerializeField] private TextMeshProUGUI doorLoginErrorText;
     
         private static DoorHandler _selectedDoor;
         private static bool _isWaitingResponse;
@@ -43,6 +44,7 @@ namespace Custom.Scripts.UI
         private string _password;
         private string _inviteCode;
         private List<IMultipartFormSection> _savedMultipartForm;
+        private Coroutine currentLoginErrorCoroutine;
 
         // This method is used to initially disable the interactable UI when the door is instantiated, change the initial
         // panel to be displayed based on the user's login state, and subscribe to the OnIdChanged event to change the
@@ -219,7 +221,23 @@ namespace Custom.Scripts.UI
 
                 if (www.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.LogError(www.error);
+                    if (www.responseCode == 401)
+                    {
+                        doorLoginErrorText.text = www.downloadHandler.text;
+                    }
+                    else if (www.responseCode == 500)
+                    {
+                        doorLoginErrorText.text = "Internal server error. Please try again later.";
+                    }
+                    else
+                    {
+                        doorLoginErrorText.text = www.error;
+                    }
+                    if (currentLoginErrorCoroutine != null)
+                    {
+                        StopCoroutine(currentLoginErrorCoroutine);
+                    }
+                    currentLoginErrorCoroutine = StartCoroutine(ResetLoginErrorText());
                 }
                 else
                 {
@@ -233,6 +251,12 @@ namespace Custom.Scripts.UI
             }
         
             _isWaitingResponse = false;
+        }
+        
+        private IEnumerator ResetLoginErrorText()
+        {
+            yield return new WaitForSeconds(3f);
+            doorLoginErrorText.text = "";
         }
     
         // This method is called when the user clicks the host button. It sets the SessionData properties to indicate that
@@ -426,7 +450,23 @@ namespace Custom.Scripts.UI
             
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError(www.error);
+                if (www.responseCode == 401)
+                {
+                    doorLoginErrorText.text = www.downloadHandler.text;
+                }
+                else if (www.responseCode == 500)
+                {
+                    doorLoginErrorText.text = "Internal server error. Please try again later.";
+                }
+                else
+                {
+                    doorLoginErrorText.text = www.error;
+                }
+                if (currentLoginErrorCoroutine != null)
+                {
+                    StopCoroutine(currentLoginErrorCoroutine);
+                }
+                currentLoginErrorCoroutine = StartCoroutine(ResetLoginErrorText());
                 yield break;
             }
             var response = JsonUtility.FromJson<LoginResponseDto>(www.downloadHandler.text);
